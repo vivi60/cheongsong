@@ -1,0 +1,352 @@
+/* 전체 레이아웃 스타일 */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    background: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 20px;
+}
+
+h1 {
+    background-color: #4CAF50;
+    color: white;
+    text-align: center;
+    padding: 20px 0;
+    margin: 0;
+    font-size: 24px;
+}
+
+/* 로그인 섹션 스타일 */
+#loginSection, #boardSection {
+    padding: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form input, form textarea, form button {
+    font-size: 16px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+}
+
+form input:focus, form textarea:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+form button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #388E3C;
+}
+
+#logoutButton {
+    margin-top: 20px;
+    background-color: #f44336;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    color: white;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+#logoutButton:hover {
+    background-color: #d32f2f;
+}
+
+/* 게시글 섹션 스타일 */
+#postList {
+    margin-top: 20px;
+}
+
+.post {
+    background: #f8f9fa;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* 게시글 헤더 */
+.post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 점 3개 버튼과 제목 간 상단 정렬 */
+    margin-bottom: 10px;
+    text-align: left; /* 전체 헤더를 왼쪽 정렬 */
+}
+
+.post-header h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #4CAF50;
+    text-align: left; /* 제목을 왼쪽 정렬 */
+}
+
+.post-header .menu {
+    position: relative;
+}
+
+.menu-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.menu-btn:hover {
+    color: #4CAF50;
+}
+
+.menu-dropdown {
+    position: absolute;
+    top: 25px;
+    right: 0;
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: row; /* 가로 정렬 */
+    align-items: center; /* 수직 정렬 */
+    justify-content: center; /* 수평 정렬 */
+    padding: 5px;
+    z-index: 10;
+}
+
+.menu-dropdown button {
+    background: none;
+    border: none;
+    padding: 10px 15px; /* 버튼 내부 간격 설정 */
+    font-size: 14px;
+    cursor: pointer;
+    color: #333;
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    display: inline-block; /* 텍스트를 한 줄로 유지 */
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.menu-dropdown button:hover {
+    background-color: #f1f1f1;
+}
+
+.hidden {
+    display: none;
+}
+
+/* 게시글 본문 스타일 */
+.post-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    text-align: left;
+}
+
+.post-content {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0 0;
+    text-align: left;
+}
+
+.post-author {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+    text-align: left;
+}
+
+/* 댓글 섹션 스타일 */
+.comments {
+    margin-top: 10px;
+}
+
+.comment-section {
+    margin-top: 10px;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.comment-section input {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    text-align: left;
+}
+
+.comment-section input:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+.comment-list {
+    margin-top: 10px;
+}
+
+/* 댓글 스타일 */
+.comment {
+    background: #f8f8f8;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    position: relative;
+}
+
+.comment-actions {
+    margin-top: 5px;
+    display: flex;
+    gap: 10px; /* 버튼 간격 */
+}
+
+.reply {
+    background: #f1f1f1;
+    padding: 8px;
+    margin: 5px 0 5px 20px;
+    border-left: 2px solid #ddd;
+    border-radius: 5px;
+}
+
+.reply-actions {
+    margin-top: 5px;
+    display: flex;
+    gap: 10px; /* 버튼 간격 */
+}
+
+.comment-content, .reply-content {
+    font-size: 14px;
+    color: #555;
+}
+
+/* 댓글 및 대댓글 버튼 스타일 */
+.comment-actions button,
+.reply-actions button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.comment-actions button:hover,
+.reply-actions button:hover {
+    background-color: #388E3C;
+    transform: scale(1.00);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.comment-actions button:active,
+.reply-actions button:active {
+    transform: scale(1);
+    box-shadow: none;
+}
+
+.comment-actions button:nth-child(1),
+.reply-actions button:nth-child(1) {
+    background-color: #388E3C; /* 대댓글 버튼 - 초록색 */
+}
+
+.comment-actions button:nth-child(1):hover,
+.reply-actions button:nth-child(1):hover {
+    background-color: #246f28; /* 대댓글 버튼 호버 - 더 진한 초록색 */
+}
+
+.comment-actions button:nth-child(2),
+.reply-actions button:nth-child(2) {
+    background-color: #f44336; /* 삭제 버튼 - 빨간색 */
+}
+
+.comment-actions button:nth-child(2):hover,
+.reply-actions button:nth-child(2):hover {
+    background-color: #d32f2f; /* 삭제 버튼 호버 - 더 진한 빨간색 */
+}
+
+/* 댓글 보기 버튼 스타일 */
+.comment-btn {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    font-size: 12px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    display: inline-block;
+    text-align: center;
+}
+
+.comment-btn:hover {
+    background-color: #388E3C;
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.comment-btn:active {
+    transform: scale(1);
+    box-shadow: none;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+    .container {
+        margin: 20px;
+        width: auto;
+    }
+
+    h1 {
+        font-size: 20px;
+        padding: 15px 0;
+    }
+
+    form input, form textarea, form button, #logoutButton {
+        font-size: 14px;
+    }
+
+    .post-title {
+        font-size: 16px;
+    }
+
+    .post-content {
+        font-size: 12px;
+
+    }
+
+    .comment-btn {
+        font-size: 10px;
+        padding: 10px 10px;
+    }
+}
