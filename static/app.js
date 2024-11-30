@@ -1,4 +1,4 @@
-const API_URL = "http://127.0.0.1:8000"; // FastAPI 서버 주소
+const API_URL = "http://0.0.0.0"; // FastAPI 서버 주소
 
 const users = [
     { username: "admin", password: "admin123", role: "admin" },
