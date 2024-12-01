@@ -72,32 +72,50 @@ logoutButton.addEventListener("click", () => {
 
 // 게시글 추가
 newPostForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // 기본 폼 제출 동작 방지
+
     const title = document.getElementById("title").value.trim();
     const content = document.getElementById("content").value.trim();
 
     if (!currentUser || !title || !content) {
-        alert("로그인과 모든 입력란을 확인해주세요.");
+        alert("로그인 상태와 제목 및 내용을 확인해주세요.");
         return;
     }
 
     try {
+        // API 호출
         const response = await fetch(`${API_URL}/posts`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ title, content, author: currentUser.username })
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                title: title,
+                content: content,
+                author: currentUser.username // 현재 로그인한 사용자 이름
+            })
         });
 
-        if (response.ok) {
-            fetchPosts();
-            newPostForm.reset();
-        } else {
-            alert("게시글 추가 실패!");
+        // 응답 처리
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("게시글 추가 실패:", errorData);
+            alert(`게시글 추가 실패: ${errorData.detail || response.statusText}`);
+            return;
         }
+
+        const result = await response.json();
+        console.log("게시글 추가 성공:", result);
+
+        fetchPosts(); // 게시글 목록 새로고침
+        newPostForm.reset(); // 폼 초기화
+        alert("게시글이 추가되었습니다.");
     } catch (error) {
         console.error("게시글 추가 중 오류:", error);
+        alert("서버와의 통신 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
 });
+
 
 // 게시글 렌더링
 function renderPosts(posts) {
