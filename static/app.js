@@ -1,4 +1,6 @@
-const API_URL = "https://0.0.0.0:8000"; // FastAPI 서버 주소
+
+const API_URL = "/api"; // 동일한 도메인에서 API를 호출
+
 
 const users = [
     { username: "admin", password: "admin123", role: "admin" },
