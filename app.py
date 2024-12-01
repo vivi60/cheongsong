@@ -78,11 +78,15 @@ def get_posts(db: Session = Depends(get_db)):
 
 @app.post("/posts", response_model=PostResponse)
 def create_post(post: PostCreate, db: Session = Depends(get_db)):
-    new_post = Post(title=post.title, content=post.content, author=post.author)
-    db.add(new_post)
-    db.commit()
-    db.refresh(new_post)
-    return new_post
+    try:
+        new_post = Post(title=post.title, content=post.content, author=post.author)
+        db.add(new_post)
+        db.commit()
+        db.refresh(new_post)
+        return new_post
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating post: {str(e)}")
+
 
 @app.put("/posts/{post_id}", response_model=PostResponse)
 def update_post(post_id: int, post: PostCreate, db: Session = Depends(get_db)):
