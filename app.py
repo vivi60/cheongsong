@@ -19,7 +19,7 @@ app = FastAPI()
 # CORS 설정 (프론트엔드와 연결을 허용)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 모든 도메인 허용 (배포 시에는 특정 도메인만 허용)
+    allow_origins=["https://cheongsongdae.onrender.com"],  # 모든 도메인 허용 (배포 시에는 특정 도메인만 허용)
     allow_credentials=True,
     allow_methods=["*"],  # 모든 HTTP 메서드 허용
     allow_headers=["*"],  # 모든 헤더 허용
@@ -27,6 +27,8 @@ app.add_middleware(
 
 # 정적 파일 서빙 설정 (CSS 및 JS 제공)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+app.mount("/api", app)
 
 # HTML 파일 제공
 @app.get("/", response_class=HTMLResponse)
