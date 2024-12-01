@@ -1,5 +1,5 @@
 
-const API_URL = "https://0.0.0.0:8000"; // FastAPI 서버 주소
+const API_URL = "https://cheongsongdae.onrender.com"; // FastAPI 서버 주소
 
 
 
