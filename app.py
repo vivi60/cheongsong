@@ -9,7 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
 
-DATABASE_URL = "sqlite:////tmp/community.db"
+DATABASE_URL = "sqlite:///./community.db"  # 프로젝트 폴더에 데이터베이스 저장
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -56,9 +56,8 @@ class PostCreate(BaseModel):
 
 class PostResponse(PostCreate):
     id: int
-
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 # 의존성 주입
@@ -78,13 +77,16 @@ def get_posts(db: Session = Depends(get_db)):
 
 @app.post("/posts", response_model=PostResponse)
 def create_post(post: PostCreate, db: Session = Depends(get_db)):
+    print(f"Received POST request: {post}")
     try:
         new_post = Post(title=post.title, content=post.content, author=post.author)
         db.add(new_post)
         db.commit()
         db.refresh(new_post)
+        print(f"Post created: {new_post}")
         return new_post
     except Exception as e:
+        print(f"Error creating post: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error creating post: {str(e)}")
 
 
