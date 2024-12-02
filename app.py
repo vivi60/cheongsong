@@ -9,7 +9,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
 
-DATABASE_URL = "sqlite:///./community.db"  # 프로젝트 폴더에 데이터베이스 저장
+DATABASE_URL = "sqlite:///db/community.db"    # 프로젝트 폴더에 데이터베이스 저장
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
@@ -47,7 +47,12 @@ class Post(Base):
 
 
 # 데이터베이스 초기화
-Base.metadata.create_all(bind=engine)
+try:
+    Base.metadata.create_all(bind=engine)
+    print("Database tables created successfully!")
+except Exception as e:
+    print(f"Error creating tables: {e}")
+
 
 
 # Pydantic 스키마
