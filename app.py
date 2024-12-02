@@ -13,7 +13,7 @@ import os # 절대 경로 설정을 위해 추가
 # 절대 경로 설정
 BASE_DIR = "/opt/render/cheongsong/src"
 DB_DIR = os.path.join(BASE_DIR, "db")
-DATABASE_URL = f"sqlite:///{os.path.join(DB_DIR, 'community.db')}"
+DATABASE_URL = "sqlite:////opt/render/cheongsong/src/db/community.db"
 
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
