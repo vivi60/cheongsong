@@ -10,10 +10,9 @@ from sqlalchemy.orm import sessionmaker, Session
 from pydantic import BaseModel
 import os # 절대 경로 설정을 위해 추가
 
-# 절대 경로 설정
-DB_DIR = "/opt/render/cheongsong/src/db"
-os.makedirs(DB_DIR, exist_ok=True)
-os.chmod(DB_DIR, 0o777)  # 모든 사용자에게 읽기/쓰기 권한 부여
+# 지속 가능한 디렉토리 설정
+DB_DIR = "/var/lib/db"  # Persistent Disk의 마운트 경로로 설정
+os.makedirs(DB_DIR, exist_ok=True)  # 디렉토리 생성 (이미 존재하면 무시)
 DATABASE_URL = f"sqlite:///{os.path.join(DB_DIR, 'community.db')}"
 
 
