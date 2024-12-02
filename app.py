@@ -12,7 +12,7 @@ import os # 절대 경로 설정을 위해 추가
 
 # 절대 경로 설정
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE_URL = f"sqlite:///{os.path.join(BASE_DIR, 'db/community.db')}"
+DATABASE_URL = "sqlite:////opt/render/cheongsong/src/db/community.db"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
