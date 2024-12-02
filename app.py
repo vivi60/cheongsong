@@ -11,9 +11,11 @@ from pydantic import BaseModel
 import os # 절대 경로 설정을 위해 추가
 
 # 절대 경로 설정
-BASE_DIR = "/opt/render/cheongsong/src"
-DB_DIR = os.path.join(BASE_DIR, "db")
-DATABASE_URL = "sqlite:////opt/render/cheongsong/src/db/community.db"
+DB_DIR = "/opt/render/cheongsong/src/db"
+os.makedirs(DB_DIR, exist_ok=True)
+os.chmod(DB_DIR, 0o777)  # 모든 사용자에게 읽기/쓰기 권한 부여
+DATABASE_URL = f"sqlite:///{os.path.join(DB_DIR, 'community.db')}"
+
 
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
