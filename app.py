@@ -99,6 +99,12 @@ class ReplyCreate(BaseModel):
     content: str
     author: str
 
+    # 검증: 필드 유효성 검사
+    def __init__(self, **data):
+        if not data.get("content") or not data.get("author"):
+            raise ValueError("Both content and author are required for a reply.")
+        super().__init__(**data)
+
 class ReplyResponse(ReplyCreate):
     id: int
     comment_id: int
@@ -168,11 +174,14 @@ def add_reply(post_id: int, comment_id: int, reply: ReplyCreate, db: Session = D
     db_comment = db.query(Comment).filter(Comment.id == comment_id, Comment.post_id == post_id).first()
     if not db_comment:
         raise HTTPException(status_code=404, detail="Comment not found")
-    new_reply = Reply(content=reply.content, author=reply.author, comment_id=comment_id)
-    db.add(new_reply)
-    db.commit()
-    db.refresh(new_reply)
-    return new_reply
+    try:
+        new_reply = Reply(content=reply.content, author=reply.author, comment_id=comment_id)
+        db.add(new_reply)
+        db.commit()
+        db.refresh(new_reply)
+        return new_reply
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error creating reply: {str(e)}")
 
 @app.delete("/posts/{post_id}/comments/{comment_id}/replies/{reply_id}")
 def delete_reply(post_id: int, comment_id: int, reply_id: int, db: Session = Depends(get_db)):
