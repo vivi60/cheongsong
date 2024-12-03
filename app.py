@@ -54,6 +54,15 @@ class Comment(Base):
     author = Column(String(50), nullable=False)
     post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
     post = relationship("Post", back_populates="comments")
+    replies = relationship("Reply", back_populates="comment", cascade="all, delete-orphan")
+
+class Reply(Base):
+    __tablename__ = "replies"
+    id = Column(Integer, primary_key=True, index=True)
+    content = Column(Text, nullable=False)
+    author = Column(String(50), nullable=False)
+    comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
+    comment = relationship("Comment", back_populates="replies")
 
 # 데이터베이스 초기화
 def init_db():
@@ -83,6 +92,16 @@ class CommentCreate(BaseModel):
 class CommentResponse(CommentCreate):
     id: int
     post_id: int
+    class Config:
+        from_attributes = True
+
+class ReplyCreate(BaseModel):
+    content: str
+    author: str
+
+class ReplyResponse(ReplyCreate):
+    id: int
+    comment_id: int
     class Config:
         from_attributes = True
 
@@ -118,8 +137,7 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
 
 @app.get("/posts/{post_id}/comments", response_model=list[CommentResponse])
 def get_comments(post_id: int, db: Session = Depends(get_db)):
-    db_comments = db.query(Comment).filter(Comment.post_id == post_id).all()
-    return db_comments
+    return db.query(Comment).filter(Comment.post_id == post_id).all()
 
 @app.post("/posts/{post_id}/comments", response_model=CommentResponse)
 def add_comment(post_id: int, comment: CommentCreate, db: Session = Depends(get_db)):
@@ -140,3 +158,27 @@ def delete_comment(post_id: int, comment_id: int, db: Session = Depends(get_db))
     db.delete(db_comment)
     db.commit()
     return {"message": "Comment deleted successfully"}
+
+@app.get("/posts/{post_id}/comments/{comment_id}/replies", response_model=list[ReplyResponse])
+def get_replies(post_id: int, comment_id: int, db: Session = Depends(get_db)):
+    return db.query(Reply).filter(Reply.comment_id == comment_id).all()
+
+@app.post("/posts/{post_id}/comments/{comment_id}/replies", response_model=ReplyResponse)
+def add_reply(post_id: int, comment_id: int, reply: ReplyCreate, db: Session = Depends(get_db)):
+    db_comment = db.query(Comment).filter(Comment.id == comment_id, Comment.post_id == post_id).first()
+    if not db_comment:
+        raise HTTPException(status_code=404, detail="Comment not found")
+    new_reply = Reply(content=reply.content, author=reply.author, comment_id=comment_id)
+    db.add(new_reply)
+    db.commit()
+    db.refresh(new_reply)
+    return new_reply
+
+@app.delete("/posts/{post_id}/comments/{comment_id}/replies/{reply_id}")
+def delete_reply(post_id: int, comment_id: int, reply_id: int, db: Session = Depends(get_db)):
+    db_reply = db.query(Reply).filter(Reply.id == reply_id, Reply.comment_id == comment_id).first()
+    if not db_reply:
+        raise HTTPException(status_code=404, detail="Reply not found")
+    db.delete(db_reply)
+    db.commit()
+    return {"message": "Reply deleted successfully"}
