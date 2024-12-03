@@ -45,62 +45,7 @@ class Post(Base):
     title = Column(String(100), nullable=False)
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
-
-class Comment(Base):
-    __tablename__ = "comments"
-    id = Column(Integer, primary_key=True, index=True)
-    post_id = Column(Integer, nullable=False)
-    content = Column(Text, nullable=False)
-    author = Column(String(50), nullable=False)
-    
-# 데이터베이스 초기화
-try:
-    Base.metadata.create_all(bind=engine)
-    print("Database tables created successfully!")
-except Exception as e:
-    print(f"Error creating tables: {e}")
-
-
-
-# Pydantic 스키마
-class PostCreate(BaseModel):
-    title: str
-    content: str
-    author: str
-
-class PostResponse(PostCreate):
-    id: int
-    class Config:
-        from_attributes = True
-
-class CommentCreate(BaseModel):
-    post_id: int
-    content: str
-    author: str
-
-class CommentResponse(CommentCreate):
-    id: int
-    class Config:
-        from_attributes = True
-
-
-# 의존성 주입
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-# 데이터베이스 모델 정의
-class Post(Base):
-    __tablename__ = "posts"
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String(100), nullable=False)
-    content = Column(Text, nullable=False)
-    author = Column(String(50), nullable=False)
     comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
-
 
 class Comment(Base):
     __tablename__ = "comments"
@@ -110,6 +55,15 @@ class Comment(Base):
     post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
     post = relationship("Post", back_populates="comments")
 
+# 데이터베이스 초기화
+def init_db():
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("Database tables created successfully!")
+    except Exception as e:
+        print(f"Error creating tables: {e}")
+
+init_db()
 
 # Pydantic 스키마
 class PostCreate(BaseModel):
@@ -117,32 +71,33 @@ class PostCreate(BaseModel):
     content: str
     author: str
 
-
 class PostResponse(PostCreate):
     id: int
-
     class Config:
         from_attributes = True
-
 
 class CommentCreate(BaseModel):
     content: str
     author: str
 
-
 class CommentResponse(CommentCreate):
     id: int
     post_id: int
-
     class Config:
         from_attributes = True
 
+# 의존성 주입
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 # API 구현
 @app.get("/posts", response_model=list[PostResponse])
 def get_posts(db: Session = Depends(get_db)):
     return db.query(Post).all()
-
 
 @app.post("/posts", response_model=PostResponse)
 def create_post(post: PostCreate, db: Session = Depends(get_db)):
@@ -151,7 +106,6 @@ def create_post(post: PostCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_post)
     return new_post
-
 
 @app.delete("/posts/{post_id}")
 def delete_post(post_id: int, db: Session = Depends(get_db)):
@@ -162,28 +116,21 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Post deleted successfully"}
 
-
 @app.get("/posts/{post_id}/comments", response_model=list[CommentResponse])
 def get_comments(post_id: int, db: Session = Depends(get_db)):
     db_comments = db.query(Comment).filter(Comment.post_id == post_id).all()
-    if not db_comments:
-        raise HTTPException(status_code=404, detail="No comments found for this post")
     return db_comments
-
 
 @app.post("/posts/{post_id}/comments", response_model=CommentResponse)
 def add_comment(post_id: int, comment: CommentCreate, db: Session = Depends(get_db)):
-    # Ensure post exists
     db_post = db.query(Post).filter(Post.id == post_id).first()
     if not db_post:
         raise HTTPException(status_code=404, detail="Post not found")
-
-    new_comment = Comment(**comment.dict(), post_id=post_id)
+    new_comment = Comment(content=comment.content, author=comment.author, post_id=post_id)
     db.add(new_comment)
     db.commit()
     db.refresh(new_comment)
     return new_comment
-
 
 @app.delete("/posts/{post_id}/comments/{comment_id}")
 def delete_comment(post_id: int, comment_id: int, db: Session = Depends(get_db)):
