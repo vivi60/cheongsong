@@ -304,13 +304,14 @@ function renderComments(comments, postId) {
 
         // 대댓글 렌더링 포함
         const repliesHtml = (comment.replies || []).map(reply => `
-            <div class="reply">
-                <div class="reply-content">${reply.text}</div>
-                <div class="reply-actions">
-                    ${canEditDelete(reply.author) ? `<button onclick="deleteReply('${reply.id}', ${postId}, '${comment.id}')">삭제</button>` : ""}
-                </div>
-            </div>
-        `).join("");
+    <div class="reply">
+        <div class="reply-content">${reply.content}</div>
+        <div class="reply-actions">
+            ${canEditDelete(reply.author) ? `<button onclick="deleteReply('${reply.id}', ${postId}, '${comment.id}')">삭제</button>` : ""}
+        </div>
+    </div>
+`).join("");
+
 
         commentElement.innerHTML = `
             <div class="comment-content">${comment.content}</div>
@@ -351,10 +352,11 @@ async function deleteReply(replyId, postId, commentId) {
 async function saveReplyToServer(postId, commentId, replyText, replyId) {
     try {
         const response = await fetch(`${API_URL}/posts/${postId}/comments/${commentId}/replies`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ replyId, replyText, author: currentUser.username }),
-        });
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content: replyText, author: currentUser.username })
+});
+
         if (!response.ok) {
             console.error("대댓글 저장 실패:", response.status);
             alert("대댓글 저장에 실패했습니다.");
