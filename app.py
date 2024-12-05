@@ -37,6 +37,15 @@ async def serve_html():
     with open("src/test.html", encoding="utf-8") as html_file:  # UTF-8 인코딩 명시
         return html_file.read()
 
+# 데이터 삭제
+def init_db():
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("Database tables created successfully!")
+    except Exception as e:
+        print(f"Error creating tables: {e}")
+
+init_db()
 
 # 데이터베이스 모델 정의
 class Post(Base):
