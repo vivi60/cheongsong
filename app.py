@@ -64,6 +64,16 @@ class Reply(Base):
     comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
     comment = relationship("Comment", back_populates="replies")
 
+# 데이터베이스 초기화
+def init_db():
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("Database tables created successfully!")
+    except Exception as e:
+        print(f"Error creating tables: {e}")
+
+init_db()
+
 # Pydantic 스키마
 class PostCreate(BaseModel):
     title: str
