@@ -9,7 +9,7 @@ from pydantic import BaseModel
 import os  # 절대 경로 설정을 위해 추가
 
 # 지속 가능한 디렉토리 설정
-DB_DIR = "/opt/render/project/src/db"
+DB_DIR = "/opt/render/cheongsong/src/db"
 os.makedirs(DB_DIR, exist_ok=True)  # 디렉토리 생성
 DATABASE_URL = f"sqlite:///{os.path.join(DB_DIR, 'community.db')}"
 
