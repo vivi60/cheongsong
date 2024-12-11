@@ -99,6 +99,7 @@ form button:hover {
     align-items: center; /* 점 3개 버튼과 제목 간 상단 정렬 */
     margin-bottom: 10px;
     text-align: left; /* 전체 헤더를 왼쪽 정렬 */
+    position: relative;
 }
 
 .post-header h2 {
@@ -117,7 +118,12 @@ form button:hover {
     border: none;
     font-size: 20px;
     cursor: pointer;
+    position: absolute; /* 부모를 기준으로 위치 설정 */
+    right: 0; /* 오른쪽 끝에 위치 */
+    top: 50%; /* 세로 가운데 정렬 */
+    transform: translateY(-50%); /* 세로 가운데 정렬 보정 */
     padding: 5px;
+    color: #333;
 }
 
 .menu-btn:hover {
@@ -167,6 +173,7 @@ form button:hover {
     font-weight: bold;
     color: #333;
     margin: 0;
+    flex-grow: 1; /* 제목이 공간을 차지하도록 설정 */
     text-align: left;
 }
 
