@@ -68,15 +68,10 @@ class Reply(Base):
 @app.on_event("startup")
 async def startup_event():
     print(f"Using database file at: {DATABASE_URL}")
-    try:
-        inspector = inspect(engine)
-        if not inspector.has_table("posts"):  # 테이블 존재 여부 확인
-            Base.metadata.create_all(bind=engine)
-            print("Created missing tables.")
-        else:
-            print("All required tables already exist.")
-    except Exception as e:
-        print(f"Error during startup table check: {e}")
+    if os.path.exists("/opt/render/project/src/db/community.db"):
+        print("Database file exists.")
+    else:
+        print("Database file does NOT exist.")
 
         
 # Pydantic 스키마 정의
