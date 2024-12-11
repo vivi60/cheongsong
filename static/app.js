@@ -138,17 +138,18 @@ function renderPosts(posts) {
             <div class="post-header">
             <div>
                 <h2 class="post-title">${post.title}</h2>
-                <button class="menu-btn">⋮</button>
-            <div>
-                <p class="post-content">${post.content}</p>
-            </div>
+
             <div class="menu">
+                <button class="menu-btn">⋮</button>
                 ${canEditDelete(post.author) ? `
                 <div id="menu-${post.id}" class="menu-dropdown hidden">
                     <button onclick="editPost(${post.id})">수정</button>
                     <button onclick="deletePost(${post.id})">삭제</button>
                 </div>
                 ` : ""}
+            </div>
+            <div>
+                <p class="post-content">${post.content}</p>
             </div>
             <button class="comment-btn" onclick="toggleCommentSection(${post.id})">댓글 보기</button>
             <div id="comments-${post.id}" class="comment-section hidden">
@@ -173,11 +174,11 @@ function canEditDelete(author) {
 function setupMenuEvents() {
     document.querySelectorAll(".menu-btn").forEach((button) => {
         button.addEventListener("click", (event) => {
-            event.stopPropagation(); // 클릭 이벤트 전파 방지
+            event.stopPropagation(); // 클릭 이벤트가 부모나 다른 요소로 전파되지 않도록 방지
             const dropdown = button.nextElementSibling;
             dropdown.classList.toggle("hidden");
 
-            // 다른 드롭다운 닫기
+            // 다른 드롭다운 메뉴는 닫기
             document.querySelectorAll(".menu-dropdown").forEach((menu) => {
                 if (menu !== dropdown) {
                     menu.classList.add("hidden");
@@ -186,11 +187,12 @@ function setupMenuEvents() {
         });
     });
 
-    // 화면 클릭 시 모든 드롭다운 닫기
+    // 화면의 다른 곳 클릭 시 모든 드롭다운 닫기
     document.addEventListener("click", () => {
         document.querySelectorAll(".menu-dropdown").forEach((menu) => menu.classList.add("hidden"));
     });
 }
+
 
 // 댓글 섹션 토글
 function toggleCommentSection(postId) {
