@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, inspect
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session, relationship
 from pydantic import BaseModel
@@ -38,16 +38,6 @@ async def serve_html():
         return html_file.read()
 
 
-# 기존 데이터베이스 파일이 유지된 상태에서 테이블만 생성
-@app.on_event("startup")
-async def startup_event():
-    try:
-        Base.metadata.create_all(bind=engine)
-        print("Checked and created missing tables if necessary.")
-    except Exception as e:
-        print(f"Error ensuring tables exist: {e}")
-
-
 # 데이터베이스 모델 정의
 class Post(Base):
     __tablename__ = "posts"
@@ -74,6 +64,19 @@ class Reply(Base):
     comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
     comment = relationship("Comment", back_populates="replies")
 
+# 데이터베이스 테이블 존재 여부 및 초기화
+@app.on_event("startup")
+async def startup_event():
+    try:
+        inspector = inspect(engine)
+        if not inspector.has_table("posts"):
+            Base.metadata.create_all(bind=engine)  # 테이블이 없을 때만 생성
+            print("Created missing tables (e.g., 'posts').")
+        else:
+            print("All required tables already exist.")
+    except Exception as e:
+        print(f"Error during startup table check: {e}")
+        
 # Pydantic 스키마 정의
 class PostCreate(BaseModel):
     title: str
