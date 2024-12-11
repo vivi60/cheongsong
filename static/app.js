@@ -47,6 +47,8 @@ function displayBoard() {
     }
 }
 
+
+
 // 로그인 처리
 const loginForm = document.getElementById("loginForm");
 loginForm.addEventListener("submit", (e) => {
@@ -383,17 +385,38 @@ async function deletePost(postId) {
 }
 
 // 서버에서 게시글 가져오기
-async function fetchPosts() {
+async function fetchPosts(page = 1) {
+    const offset = (page - 1) * postsPerPage; // 현재 페이지에 맞는 offset 계산
+
     try {
-        const response = await fetch(`${API_URL}/posts`);
+        const response = await fetch(`${API_URL}/posts?limit=${postsPerPage}&offset=${offset}`);
         if (response.ok) {
-            const posts = await response.json();
-            renderPosts(posts);
+            const data = await response.json();
+            renderPosts(data.posts); // 게시글 렌더링
+            renderPagination(data.total, page); // 페이지네이션 버튼 렌더링
         }
     } catch (error) {
         console.error("게시글 로드 중 오류 발생:", error);
     }
 }
+
+// 위에 함수 동작하게 해주는 어쩌고
+function renderPagination(totalPosts, currentPage) {
+    const totalPages = Math.ceil(totalPosts / postsPerPage); // 총 페이지 수 계산
+    const paginationContainer = document.getElementById("pagination");
+    paginationContainer.innerHTML = ""; // 기존 버튼 초기화
+
+    for (let i = 1; i <= totalPages; i++) {
+        const button = document.createElement("button");
+        button.textContent = i;
+        button.className = i === currentPage ? "active" : "";
+        button.addEventListener("click", () => {
+            fetchPosts(i); // 해당 페이지의 게시글 가져오기
+        });
+        paginationContainer.appendChild(button);
+    }
+}
+
 
 //게시글 수정
 async function editPost(postId) {
