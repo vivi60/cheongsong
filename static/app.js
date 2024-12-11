@@ -14,6 +14,7 @@ const userRoleSpan = document.getElementById("userRole");
 const newPostForm = document.getElementById("newPostForm");
 const logoutButton = document.getElementById("logoutButton");
 const postList = document.getElementById("postList");
+const postsPerPage = 10; // 한 페이지에 표시할 게시글 수
 
 let currentUser = null;
 
@@ -41,7 +42,7 @@ function displayBoard() {
         loginSection.style.display = "none";
         boardSection.style.display = "block";
         userRoleSpan.textContent = currentUser.role === "admin" ? "관리자님" : "익명님";
-        fetchPosts();
+        fetchPosts(1);
     } else {
         showLogin();
     }
@@ -386,17 +387,20 @@ async function deletePost(postId) {
 
 // 서버에서 게시글 가져오기
 async function fetchPosts(page = 1) {
-    const offset = (page - 1) * postsPerPage; // 현재 페이지에 맞는 offset 계산
+    const offset = (page - 1) * postsPerPage;
 
     try {
         const response = await fetch(`${API_URL}/posts?limit=${postsPerPage}&offset=${offset}`);
         if (response.ok) {
             const data = await response.json();
+            console.log("Fetched posts:", data); // 데이터 확인
             renderPosts(data.posts); // 게시글 렌더링
-            renderPagination(data.total, page); // 페이지네이션 버튼 렌더링
+            renderPagination(data.total, page); // 페이지네이션 렌더링
+        } else {
+            console.error("Failed to fetch posts:", response.status);
         }
     } catch (error) {
-        console.error("게시글 로드 중 오류 발생:", error);
+        console.error("Error fetching posts:", error);
     }
 }
 
