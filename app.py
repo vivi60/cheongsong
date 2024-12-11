@@ -37,6 +37,17 @@ async def serve_html():
     with open("src/test.html", encoding="utf-8") as html_file:
         return html_file.read()
 
+
+# 기존 데이터베이스 파일이 유지된 상태에서 테이블만 생성
+@app.on_event("startup")
+async def startup_event():
+    try:
+        Base.metadata.create_all(bind=engine)
+        print("Checked and created missing tables if necessary.")
+    except Exception as e:
+        print(f"Error ensuring tables exist: {e}")
+
+
 # 데이터베이스 모델 정의
 class Post(Base):
     __tablename__ = "posts"
