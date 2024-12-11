@@ -132,9 +132,16 @@ def get_db():
         db.close()
 
 # API 구현
-@app.get("/posts", response_model=list[PostResponse])
-def get_posts(db: Session = Depends(get_db)):
-    return db.query(Post).all()
+@app.get("/posts")
+def get_posts(
+    limit: int = Query(10, ge=1),  # 한 페이지당 10개의 게시글 (기본값)
+    offset: int = Query(0, ge=0),  # 시작 위치
+    db: Session = Depends(get_db)
+):
+    total = db.query(Post).count()  # 전체 게시글 개수
+    posts = db.query(Post).offset(offset).limit(limit).all()
+    return {"total": total, "posts": posts}
+
 
 @app.post("/posts", response_model=PostResponse)
 def create_post(post: PostCreate, db: Session = Depends(get_db)):
