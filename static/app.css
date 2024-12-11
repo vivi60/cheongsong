@@ -350,3 +350,33 @@ form button:hover {
         padding: 10px 10px;
     }
 }
+
+/* 게시글넘기기*/
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.pagination button {
+    background-color: #f1f1f1;
+    color: #333;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.pagination button.active {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+}
+
