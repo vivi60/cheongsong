@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
 from fastapi.middleware.cors import CORSMiddleware
-from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, inspect
+from sqlalchemy import create_engine, Column, Integer, String, Text, ForeignKey, inspect, text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session, relationship
 from pydantic import BaseModel
@@ -69,12 +69,14 @@ class Reply(Base):
 async def startup_event():
     print(f"Using database file at: {DATABASE_URL}")
     try:
-        inspector = inspect(engine)
-        if not inspector.has_table("posts"):  # 테이블 존재 여부 확인
-            Base.metadata.create_all(bind=engine)
-            print("Created missing tables.")
-        else:
-            print("All required tables already exist.")
+        # 테이블 존재 여부를 SQL로 직접 확인
+        with engine.connect() as connection:
+            result = connection.execute(text("SELECT name FROM sqlite_master WHERE type='table' AND name='posts';"))
+            if result.fetchone() is None:  # 테이블이 없으면 생성
+                Base.metadata.create_all(bind=engine)
+                print("Created missing tables.")
+            else:
+                print("All required tables already exist.")
     except Exception as e:
         print(f"Error during startup table check: {e}")
 
