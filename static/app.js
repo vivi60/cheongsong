@@ -5,7 +5,9 @@ const API_URL = "https://cheongsongdae.onrender.com"; // FastAPI 서버 주소
 
 const users = [
     { username: "admin", password: "admin123", role: "admin" },
-    { username: "user", password: "user123", role: "user" }
+    { username: "user1", password: "user123", role: "user" }
+    { username: "user2", password: "user123", role: "user" }
+    { username: "user3", password: "user123", role: "user" }
 ];
 
 const loginSection = document.getElementById("loginSection");
