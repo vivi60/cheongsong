@@ -94,12 +94,11 @@ form button:hover {
 
 /* 게시글 헤더 */
 .post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center; /* 점 3개 버튼과 제목 간 상단 정렬 */
-    margin-bottom: 10px;
-    text-align: left; /* 전체 헤더를 왼쪽 정렬 */
-    position: relative;
+    display: flex; /* 제목과 메뉴 버튼을 한 줄로 정렬 */
+    justify-content: space-between; /* 제목과 버튼을 양쪽 끝으로 배치 */
+    align-items: center; /* 수직 가운데 정렬 */
+    position: relative; /* 버튼 위치 조정을 위한 기준점 */
+    padding: 0 10px; /* 좌우 여백 추가 */
 }
 
 .post-header h2 {
@@ -170,12 +169,11 @@ form button:hover {
 
 /* 게시글 본문 스타일 */
 .post-title {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
     margin: 0;
-    flex-grow: 1; /* 제목이 공간을 차지하도록 설정 */
-    text-align: left;
+    font-size: 18px;
+    color: #333;
+    text-align: left; /* 제목 왼쪽 정렬 */
+    flex-grow: 1; /* 제목이 남은 공간을 차지하도록 설정 */
 }
 
 .post-content {
