@@ -206,3 +206,14 @@ def delete_reply(post_id: int, comment_id: int, reply_id: int, db: Session = Dep
     db.delete(db_reply)
     db.commit()
     return {"message": "Reply deleted successfully"}
+
+
+# 데이터베이스 파일 다운로드 API
+from fastapi.responses import FileResponse
+
+@app.get("/download-db")
+def download_db():
+    db_path = "/opt/render/project/src/db/community.db"
+    if not os.path.exists(db_path):
+        raise HTTPException(status_code=404, detail="Database file not found")
+    return FileResponse(db_path, filename="community.db")
