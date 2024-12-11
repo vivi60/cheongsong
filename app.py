@@ -9,8 +9,8 @@ from pydantic import BaseModel
 import os  # 절대 경로 설정을 위해 추가
 
 # 지속 가능한 디렉토리 설정
-DB_DIR = "/opt/render/project/src/db"
-os.makedirs(DB_DIR, exist_ok=True)  # 디렉토리 생성
+DB_DIR = "/data/db"
+os.makedirs(DB_DIR, exist_ok=True)  # 디렉터리 생성 (이미 존재하면 무시)
 DATABASE_URL = f"sqlite:///{os.path.join(DB_DIR, 'community.db')}"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
