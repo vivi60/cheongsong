@@ -67,16 +67,17 @@ class Reply(Base):
 # 데이터베이스 테이블 존재 여부 및 초기화
 @app.on_event("startup")
 async def startup_event():
-    print(f"Using database file at: {DATABASE_URL}")
+        print(f"Using database file at: {DATABASE_URL}")
     try:
         inspector = inspect(engine)
-        if not inspector.has_table("posts"):
-            Base.metadata.create_all(bind=engine)  # 테이블이 없을 때만 생성
-            print("Created missing tables (e.g., 'posts').")
+        if not inspector.has_table("posts"):  # 테이블 존재 여부 확인
+            Base.metadata.create_all(bind=engine)
+            print("Created missing tables.")
         else:
             print("All required tables already exist.")
     except Exception as e:
         print(f"Error during startup table check: {e}")
+
         
 # Pydantic 스키마 정의
 class PostCreate(BaseModel):
