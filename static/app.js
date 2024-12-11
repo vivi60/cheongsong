@@ -136,6 +136,7 @@ function renderPosts(posts) {
 
         postElement.innerHTML = `
             <div class="post-header">
+            <div>
                 <h2 class="post-title">${post.title}</h2>
 
             <div class="menu">
