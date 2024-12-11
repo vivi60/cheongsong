@@ -67,7 +67,7 @@ class Reply(Base):
 # 데이터베이스 테이블 존재 여부 및 초기화
 @app.on_event("startup")
 async def startup_event():
-        print(f"Using database file at: {DATABASE_URL}")
+    print(f"Using database file at: {DATABASE_URL}")
     try:
         inspector = inspect(engine)
         if not inspector.has_table("posts"):  # 테이블 존재 여부 확인
