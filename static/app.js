@@ -137,10 +137,11 @@ function renderPosts(posts) {
         postElement.innerHTML = `
             <div class="post-header">
             <div>
+
+                
+            <div class="menu">
                 <h2 class="post-title">${post.title}</h2>
                 <button class="menu-btn">⋮</button>
-            <div class="menu">
-            
                 ${canEditDelete(post.author) ? `
                 <div id="menu-${post.id}" class="menu-dropdown hidden">
                     <button onclick="editPost(${post.id})">수정</button>
