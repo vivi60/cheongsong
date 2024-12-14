@@ -222,7 +222,7 @@ form button:hover {
 
 /* 댓글 스타일 */
 .comment {
-    background: #ffffff; /* 댓글의 배경색 */
+    background: #f1f1f1; /* 댓글의 배경색 */
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ddd; /* 테두리 */
