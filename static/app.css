@@ -47,12 +47,12 @@ form input, form textarea, form button {
 }
 
 form input:focus, form textarea:focus {
-    border-color: #141414;
+    border-color: #272727;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
 form button {
-    background-color: #141414;
+    background-color: #272727;
     color: white;
     border: none;
     cursor: pointer;
@@ -123,7 +123,7 @@ form button:hover {
 }
 
 .menu-btn:hover {
-    color: #4CAF50;
+    color: #b80006;
 }
 
 .menu-dropdown {
@@ -212,7 +212,7 @@ form button:hover {
 }
 
 .comment-section input:focus {
-    border-color: #4CAF50;
+    border-color: #e60009;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
@@ -259,7 +259,7 @@ form button:hover {
 /* 댓글 및 대댓글 버튼 스타일 */
 .comment-actions button,
 .reply-actions button {
-    background-color: #4CAF50;
+    background-color: #272727;
     color: white;
     border: none;
     border-radius: 5px;
@@ -271,7 +271,7 @@ form button:hover {
 
 .comment-actions button:hover,
 .reply-actions button:hover {
-    background-color: #388E3C;
+    background-color: #000000;
     transform: scale(1.00);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -284,27 +284,27 @@ form button:hover {
 
 .comment-actions button:nth-child(1),
 .reply-actions button:nth-child(1) {
-    background-color: #388E3C; /* 대댓글 버튼 - 초록색 */
+    background-color: #272727; /* 대댓글 버튼 - 검은색 */
 }
 
 .comment-actions button:nth-child(1):hover,
 .reply-actions button:nth-child(1):hover {
-    background-color: #246f28; /* 대댓글 버튼 호버 - 더 진한 초록색 */
+    background-color: #000000; /* 대댓글 버튼 호버 - 더 진한 검은색 */
 }
 
 .comment-actions button:nth-child(2),
 .reply-actions button:nth-child(2) {
-    background-color: #f44336; /* 삭제 버튼 - 빨간색 */
+    background-color: #e60009; /* 삭제 버튼 - 빨간색 */
 }
 
 .comment-actions button:nth-child(2):hover,
 .reply-actions button:nth-child(2):hover {
-    background-color: #d32f2f; /* 삭제 버튼 호버 - 더 진한 빨간색 */
+    background-color: #b80006; /* 삭제 버튼 호버 - 더 진한 빨간색 */
 }
 
 /* 댓글 보기 버튼 스타일 */
 .comment-btn {
-    background-color: #4CAF50;
+    background-color: #e60009;
     color: white;
     border: none;
     padding: 4px 8px;
@@ -317,7 +317,7 @@ form button:hover {
 }
 
 .comment-btn:hover {
-    background-color: #388E3C;
+    background-color: #b80006;
     transform: scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -377,12 +377,12 @@ form button:hover {
 }
 
 .pagination button:hover {
-    background-color: #4CAF50;
+    background-color: #b80006;
     color: white;
 }
 
 .pagination button.active {
-    background-color: #4CAF50;
+    background-color: #e60009;
     color: white;
     border: none;
 }
