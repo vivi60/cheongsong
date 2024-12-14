@@ -47,12 +47,12 @@ form input, form textarea, form button {
 }
 
 form input:focus, form textarea:focus {
-    border-color: #4CAF50;
+    border-color: #141414;
     box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
 
 form button {
-    background-color: #4CAF50;
+    background-color: #141414;
     color: white;
     border: none;
     cursor: pointer;
