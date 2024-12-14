@@ -98,7 +98,7 @@ form button:hover {
     justify-content: space-between; /* 제목은 왼쪽, 메뉴 버튼은 오른쪽으로 배치 */
     align-items: center; /* 수직 가운데 정렬 */
     position: relative; /* 버튼 위치 조정을 위한 기준점 */
-    padding: 0 10px; /* 좌우 여백 추가 */
+    padding: 10 15px; /* 좌우 여백 추가 */
 }
 
 .post-header h2 {
@@ -175,8 +175,9 @@ form button:hover {
 .post-content {
     font-size: 14px;
     color: #555;
-    margin: 5px 0 0;
+    margin: 10px 0 0;
     text-align: left;
+    padding: 0 15px; /* 내용 패딩 추가 */
 }
 
 .post-author {
