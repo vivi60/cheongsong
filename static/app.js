@@ -136,16 +136,20 @@ function renderPosts(posts) {
 
         postElement.innerHTML = `
             <div class="post-header">
-            <div>
-            <h2 class="post-title">${post.title}</h2>
-            <div class="menu">
-                <button class="menu-btn">⋮</button>
-                ${canEditDelete(post.author) ? `
-                <div id="menu-${post.id}" class="menu-dropdown hidden">
-                    <button onclick="editPost(${post.id})">수정</button>
-                    <button onclick="deletePost(${post.id})">삭제</button>
+                <h2 class="post-title">${post.title}</h2>
+                ${
+                    canEditDelete(post.author) // 글쓴 사람이나 관리자인 경우에만 메뉴 표시
+                        ? `
+                <div class="menu-container">
+                    <button class="menu-btn">⋮</button>
+                    <div id="menu-${post.id}" class="menu-dropdown hidden">
+                        <button onclick="editPost(${post.id})">수정</button>
+                        <button onclick="deletePost(${post.id})">삭제</button>
+                    </div>
                 </div>
-                ` : ""}
+                `
+                        : ""
+                }
             </div>
             <div>
                 <p class="post-content">${post.content}</p>
@@ -166,8 +170,10 @@ function renderPosts(posts) {
 
 // 권한 확인
 function canEditDelete(author) {
-    return currentUser.role === "admin" || currentUser.username === author;
+    // 현재 사용자가 admin이거나 글쓴 사람이면 true 반환
+    return currentUser && (currentUser.role === "admin" || currentUser.username === author);
 }
+
 
 // 메뉴 토글
 function setupMenuEvents() {
