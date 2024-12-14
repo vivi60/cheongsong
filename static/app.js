@@ -330,8 +330,8 @@ function renderComments(comments, postId) {
         commentElement.innerHTML = `
             <div class="comment-content">${comment.content}</div>
             <div class="comment-actions">
-                ${canEditDelete(comment.author) ? `
                 <button onclick="addReply('${comment.id}', ${postId})">대댓글 작성</button>
+                ${canEditDelete(comment.author) ? `
                 <button onclick="deleteComment('${comment.id}', ${postId})">삭제</button>
                 ` : ""}
             </div>
