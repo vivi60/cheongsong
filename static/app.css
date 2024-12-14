@@ -177,7 +177,6 @@ form button:hover {
     color: #555;
     margin: 10px 0 0;
     text-align: left;
-    padding: 0 15px; /* 내용 패딩 추가 */
 }
 
 .post-author {
