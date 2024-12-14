@@ -129,7 +129,9 @@ newPostForm.addEventListener("submit", async (e) => {
 // 게시글 렌더링
 function renderPosts(posts) {
     postList.innerHTML = ""; // 게시글 목록 초기화
-    posts.forEach((post) => {
+
+    // 게시글을 최신 순서대로 렌더링
+    posts.slice().reverse().forEach((post) => {
         const postElement = document.createElement("div");
         postElement.className = "post";
         postElement.dataset.id = post.id;
