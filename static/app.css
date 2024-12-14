@@ -193,8 +193,11 @@ form button:hover {
 
 .comment-section {
     margin-top: 10px;
-    padding: 10px;
+    padding: 15px;
     border-top: 1px solid #ddd;
+    background-color: #f9f9f9; /* 댓글 섹션 배경색 */
+    border-radius: 8px; /* 섹션의 테두리 둥글게 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 살짝 그림자 추가 */
 }
 
 .comment-section input {
@@ -219,10 +222,12 @@ form button:hover {
 
 /* 댓글 스타일 */
 .comment {
-    background: #f8f8f8;
+    background: #ffffff; /* 댓글의 배경색 */
     padding: 10px;
     margin-bottom: 10px;
-    border-radius: 5px;
+    border: 1px solid #ddd; /* 테두리 */
+    border-radius: 5px; /* 댓글의 둥근 모서리 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 댓글 그림자 */
     position: relative;
 }
 
@@ -233,11 +238,11 @@ form button:hover {
 }
 
 .reply {
-    background: #f1f1f1;
+    background: #f1f1f1; /* 대댓글의 배경색 */
     padding: 8px;
-    margin: 5px 0 5px 20px;
-    border-left: 2px solid #ddd;
-    border-radius: 5px;
+    margin: 10px 0 10px 20px; /* 들여쓰기 및 간격 조정 */
+    border-left: 3px solid #ddd; /* 대댓글의 왼쪽 테두리 */
+    border-radius: 5px; /* 둥근 모서리 */
 }
 
 .reply-actions {
