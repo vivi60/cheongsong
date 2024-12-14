@@ -60,12 +60,12 @@ form button {
 }
 
 form button:hover {
-    background-color: #388E3C;
+    background-color: #000000;
 }
 
 #logoutButton {
     margin-top: 20px;
-    background-color: #f44336;
+    background-color: #E60009;
     border: none;
     cursor: pointer;
     padding: 10px;
@@ -75,7 +75,7 @@ form button:hover {
 }
 
 #logoutButton:hover {
-    background-color: #d32f2f;
+    background-color: #b80006;
 }
 
 /* 게시글 섹션 스타일 */
@@ -104,7 +104,7 @@ form button:hover {
 .post-header h2 {
     margin: 0;
     font-size: 18px;
-    color: #4CAF50;
+    color: #e60009;
     text-align: left; /* 제목을 왼쪽 정렬 */
 }
 
