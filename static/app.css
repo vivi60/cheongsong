@@ -112,9 +112,6 @@ form button:hover {
     position: relative;
 }
 
-.menu-container {
-    position: relative; /* 드롭다운 메뉴 위치를 기준으로 설정 */
-}
 
 .menu-btn {
     background: none;
