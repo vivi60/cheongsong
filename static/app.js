@@ -138,9 +138,7 @@ function renderPosts(posts) {
             <div class="post-header">
             <div>
                 <h2 class="post-title">${post.title}</h2>
-                
             <div class="menu">
-
                 <button class="menu-btn">⋮</button>
                 ${canEditDelete(post.author) ? `
                 <div id="menu-${post.id}" class="menu-dropdown hidden">
