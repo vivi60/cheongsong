@@ -175,6 +175,7 @@ form button:hover {
 .post-content {
     font-size: 14px;
     color: #555;
+    margin: 5px 0 0;
     text-align: left;
 }
 
