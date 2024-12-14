@@ -231,11 +231,12 @@ function renderComments(comments, postId) {
         commentElement.innerHTML = `
             <div class="comment-content">${comment.content}</div>
             <div class="comment-actions">
+                <button onclick="addReply('${comment.id}', ${postId})">대댓글 작성</button>
                 ${canEditDelete(comment.author) ? `
-                <button onclick="editComment(${comment.id}, ${postId})">대댓글</button>
-                <button onclick="deleteComment(${comment.id}, ${postId})">삭제</button>
+                <button onclick="deleteComment('${comment.id}', ${postId})">삭제</button>
                 ` : ""}
             </div>
+
         `;
 
         commentList.appendChild(commentElement);
