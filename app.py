@@ -55,9 +55,16 @@ class Comment(Base):
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
     post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
-    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)  # 대댓글을 위한 부모 댓글 ID
+    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)  # 부모 댓글 참조
     post = relationship("Post", back_populates="comments")
-    replies = relationship("Comment", backref="parent", remote_side=[id], cascade="all, delete-orphan")
+    replies = relationship(
+        "Comment",
+        backref="parent",
+        remote_side=[id],
+        cascade="all, delete-orphan",
+        single_parent=True  # 단일 부모만 허용
+    )
+
 
 
 class Reply(Base):
