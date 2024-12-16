@@ -55,8 +55,10 @@ class Comment(Base):
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
     post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
+    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)  # 대댓글을 위한 부모 댓글 ID
     post = relationship("Post", back_populates="comments")
-    replies = relationship("Reply", back_populates="comment", cascade="all, delete-orphan")
+    replies = relationship("Comment", backref="parent", remote_side=[id], cascade="all, delete-orphan")
+
 
 class Reply(Base):
     __tablename__ = "replies"
@@ -74,6 +76,7 @@ async def startup_event():
     Base.metadata.drop_all(bind=engine)  # 기존 테이블 삭제
     Base.metadata.create_all(bind=engine)  # 새 테이블 생성
     print("Database tables recreated successfully.")
+
 
 
         
@@ -181,16 +184,18 @@ def add_comment(post_id: int, comment: CommentCreate, db: Session = Depends(get_
     db_post = db.query(Post).filter(Post.id == post_id).first()
     if not db_post:
         raise HTTPException(status_code=404, detail="Post not found")
+
     new_comment = Comment(
         content=comment.content,
         author=comment.author,
         post_id=post_id,
-        parent_id=comment.parent_id  # 대댓글이면 부모 ID를 저장
+        parent_id=comment.parent_id  # 선택적으로 부모 댓글 설정
     )
     db.add(new_comment)
     db.commit()
     db.refresh(new_comment)
     return new_comment
+
 
 
 @app.delete("/posts/{post_id}/comments/{comment_id}")
