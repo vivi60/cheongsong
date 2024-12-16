@@ -76,6 +76,7 @@ class Comment(Base):
 
 
 
+
 class Reply(Base):
     __tablename__ = "replies"
     id = Column(Integer, primary_key=True, index=True)
@@ -205,12 +206,13 @@ def add_comment(post_id: int, comment: CommentCreate, db: Session = Depends(get_
         content=comment.content,
         author=comment.author,
         post_id=post_id,
-        parent_id=comment.parent_id  # 선택적으로 부모 댓글 설정
+        parent_id=comment.parent_id  # 대댓글인 경우 parent_id를 설정
     )
     db.add(new_comment)
     db.commit()
     db.refresh(new_comment)
     return new_comment
+
 
 
 
