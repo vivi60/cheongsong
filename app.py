@@ -82,7 +82,8 @@ class Reply(Base):
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
     comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
-    comment = relationship("Comment", back_populates="replies")  # Comment.replies와 연결
+    comment = relationship("Comment", back_populates="replies")
+
 
 
 
