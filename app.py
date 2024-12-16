@@ -96,9 +96,13 @@ class CommentCreate(BaseModel):
     content: str
     author: str
 
-class CommentResponse(CommentCreate):
+class CommentResponse(BaseModel):
     id: int
+    content: str
+    author: str
     post_id: int
+    replies: list[ReplyResponse] = []  # 대댓글 필드 추가
+
     class Config:
         from_attributes = True
 
@@ -117,9 +121,12 @@ class ReplyCreate(BaseModel):
             raise ValueError("Both content and author are required for a reply.")
         super().__init__(**data)
 
-class ReplyResponse(ReplyCreate):
+class ReplyResponse(BaseModel):
     id: int
+    content: str
+    author: str
     comment_id: int
+
     class Config:
         from_attributes = True
 
@@ -162,7 +169,12 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
 
 @app.get("/posts/{post_id}/comments", response_model=list[CommentResponse])
 def get_comments(post_id: int, db: Session = Depends(get_db)):
-    return db.query(Comment).filter(Comment.post_id == post_id).all()
+    comments = db.query(Comment).filter(Comment.post_id == post_id).all()
+    # 각 댓글에 대한 대댓글 조회
+    for comment in comments:
+        comment.replies = db.query(Reply).filter(Reply.comment_id == comment.id).all()
+    return comments
+
 
 @app.post("/posts/{post_id}/comments", response_model=CommentResponse)
 def add_comment(post_id: int, comment: CommentCreate, db: Session = Depends(get_db)):
