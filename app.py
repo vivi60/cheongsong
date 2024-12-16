@@ -69,16 +69,11 @@ class Reply(Base):
 async def startup_event():
     print(f"Using database file at: {DATABASE_URL}")
     try:
-        # 테이블 존재 여부를 SQL로 직접 확인
-        with engine.connect() as connection:
-            result = connection.execute(text("SELECT name FROM sqlite_master WHERE type='table' AND name='posts';"))
-            if result.fetchone() is None:  # 테이블이 없으면 생성
-                Base.metadata.create_all(bind=engine)
-                print("Created missing tables.")
-            else:
-                print("All required tables already exist.")
+        Base.metadata.create_all(bind=engine)  # 테이블 생성
+        print("Database initialized successfully.")
     except Exception as e:
-        print(f"Error during startup table check: {e}")
+        print(f"Database initialization error: {e}")
+
 
         
 # Pydantic 스키마 정의
