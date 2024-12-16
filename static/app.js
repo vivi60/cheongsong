@@ -92,7 +92,7 @@ newPostForm.addEventListener("submit", async (e) => {
 
     try {
         // API 호출
-        const response = await fetch(${API_URL}/posts, {
+        const response = await fetch(`${API_URL}/posts`, { // 백틱 사용
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -108,7 +108,7 @@ newPostForm.addEventListener("submit", async (e) => {
         if (!response.ok) {
             const errorData = await response.json();
             console.error("게시글 추가 실패:", errorData);
-            alert(게시글 추가 실패: ${errorData.detail || response.statusText});
+            alert(`게시글 추가 실패: ${errorData.detail || response.statusText}`); // 백틱으로 수정
             return;
         }
 
@@ -123,6 +123,7 @@ newPostForm.addEventListener("submit", async (e) => {
         alert("서버와의 통신 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
 });
+
 
 
 // 게시글 렌더링
