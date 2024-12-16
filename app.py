@@ -61,7 +61,7 @@ class Comment(Base):
     # 게시글과의 관계
     post = relationship("Post", back_populates="comments")
 
-    # 부모 댓글과 자식 댓글 관계
+    # 부모 댓글과 대댓글 관계
     parent = relationship(
         "Comment",
         remote_side=[id],
@@ -190,10 +190,8 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
 @app.get("/posts/{post_id}/comments", response_model=list[CommentResponse])
 def get_comments(post_id: int, db: Session = Depends(get_db)):
     comments = db.query(Comment).filter(Comment.post_id == post_id, Comment.parent_id == None).all()
-    # 각 댓글에 대한 대댓글 조회
-    for comment in comments:
-        comment.replies = db.query(Reply).filter(Reply.comment_id == comment.id).all()
     return comments
+
 
 
 @app.post("/posts/{post_id}/comments", response_model=CommentResponse)
