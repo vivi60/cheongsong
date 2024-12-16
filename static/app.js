@@ -136,12 +136,12 @@ function renderPosts(posts) {
         postElement.className = "post";
         postElement.dataset.id = post.id;
 
-        postElement.innerHTML = 
+        postElement.innerHTML = `
             <div class="post-header">
                 <h2 class="post-title">${post.title}</h2>
                 ${
                     canEditDelete(post.author) // 글쓴 사람이나 관리자인 경우에만 메뉴 표시
-                        ? 
+                        ? ` 
                 <div class="menu-container">
                     <button class="menu-btn">⋮</button>
                     <div id="menu-${post.id}" class="menu-dropdown hidden">
@@ -150,7 +150,7 @@ function renderPosts(posts) {
                     </div>
                 </div>
                 
-                        : ""
+                      ` : ""
                 }
             </div>
             <div>
@@ -161,7 +161,7 @@ function renderPosts(posts) {
                 <input type="text" placeholder="댓글을 입력하세요" onkeydown="addComment(event, ${post.id})">
                 <div class="comment-list"></div>
             </div>
-        ;
+        `;
 
         postList.appendChild(postElement);
         fetchComments(post.id); // 댓글 로드
