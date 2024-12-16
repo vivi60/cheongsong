@@ -71,8 +71,8 @@ class Reply(Base):
 @app.on_event("startup")
 async def startup_event():
     print(f"Using database file at: {DATABASE_URL}")
-        Base.metadata.drop_all(bind=engine)  # 기존 테이블 삭제
-        Base.metadata.create_all(bind=engine)  # 새 테이블 생성
+    Base.metadata.drop_all(bind=engine)  # 기존 테이블 삭제
+    Base.metadata.create_all(bind=engine)  # 새 테이블 생성
     try:
         # 테이블 존재 여부를 SQL로 직접 확인
         with engine.connect() as connection:
