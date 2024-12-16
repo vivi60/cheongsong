@@ -44,7 +44,7 @@ function displayBoard() {
         loginSection.style.display = "none";
         boardSection.style.display = "block";
         userRoleSpan.textContent = currentUser.role === "admin" ? "관리자님" : "익명님";
-        fetchPosts(1);
+        fetchPosts(1); // 게시글 불러오기
     } else {
         showLogin();
     }
@@ -52,8 +52,8 @@ function displayBoard() {
 
 
 
+
 // 로그인 처리
-const loginForm = document.getElementById("loginForm");
 loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
@@ -65,11 +65,12 @@ loginForm.addEventListener("submit", (e) => {
     if (user) {
         currentUser = user;
         localStorage.setItem("loggedInUser", JSON.stringify(user));
-        displayBoard();
+        displayBoard(); // 게시판 화면 표시
     } else {
         alert("아이디 또는 비밀번호가 잘못되었습니다.");
     }
 });
+
 
 // 로그아웃 처리
 logoutButton.addEventListener("click", () => {
@@ -408,19 +409,22 @@ async function fetchPosts(page = 1) {
     const offset = (page - 1) * postsPerPage;
 
     try {
-        const response = await fetch(${API_URL}/posts?limit=${postsPerPage}&offset=${offset});
+        const response = await fetch(`${API_URL}/posts?limit=${postsPerPage}&offset=${offset}`);
         if (response.ok) {
             const data = await response.json();
-            console.log("Fetched posts:", data); // 데이터 확인
+            console.log("Fetched posts:", data); // 확인 로그 추가
             renderPosts(data.posts); // 게시글 렌더링
             renderPagination(data.total, page); // 페이지네이션 렌더링
         } else {
             console.error("Failed to fetch posts:", response.status);
+            alert("게시글을 가져오는 데 실패했습니다.");
         }
     } catch (error) {
         console.error("Error fetching posts:", error);
+        alert("서버와의 통신 중 문제가 발생했습니다.");
     }
 }
+
 
 // 위에 함수 동작하게 해주는 어쩌고
 function renderPagination(totalPosts, currentPage) {
