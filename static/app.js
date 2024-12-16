@@ -92,7 +92,7 @@ newPostForm.addEventListener("submit", async (e) => {
 
     try {
         // API 호출
-        const response = await fetch(${API_URL}/posts, {
+        const response = await fetch(`${API_URL}/posts`, { // 백틱과 콤마 위치 수정
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -103,6 +103,7 @@ newPostForm.addEventListener("submit", async (e) => {
                 author: currentUser.username // 현재 로그인한 사용자 이름
             })
         });
+
 
         // 응답 처리
         if (!response.ok) {
