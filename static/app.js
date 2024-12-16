@@ -26,11 +26,14 @@ window.addEventListener("DOMContentLoaded", () => {
 
     if (storedUser) {
         currentUser = JSON.parse(storedUser);
+        console.log("Stored user found:", currentUser); // 확인 로그 추가
         displayBoard();
     } else {
+        console.log("No stored user found. Showing login screen.");
         showLogin(); // 로그인 화면을 기본으로 표시
     }
 });
+
 
 // 로그인 화면 표시
 function showLogin() {
@@ -40,6 +43,11 @@ function showLogin() {
 
 // 게시판 화면 표시
 function displayBoard() {
+    if (!loginSection || !boardSection || !userRoleSpan) {
+        console.error("DOM elements are missing. Ensure 'loginSection', 'boardSection', and 'userRoleSpan' exist.");
+        return;
+    }
+
     if (currentUser) {
         loginSection.style.display = "none";
         boardSection.style.display = "block";
@@ -53,23 +61,26 @@ function displayBoard() {
 
 
 
+
 // 로그인 처리
 loginForm.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const username = document.getElementById("username").value;
-    const password = document.getElementById("password").value;
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
 
     const user = users.find((u) => u.username === username && u.password === password);
 
     if (user) {
         currentUser = user;
         localStorage.setItem("loggedInUser", JSON.stringify(user));
+        console.log("User logged in:", currentUser); // 확인 로그 추가
         displayBoard(); // 게시판 화면 표시
     } else {
         alert("아이디 또는 비밀번호가 잘못되었습니다.");
     }
 });
+
 
 
 // 로그아웃 처리
