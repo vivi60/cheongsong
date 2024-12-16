@@ -138,9 +138,14 @@ def get_posts(
     offset: int = Query(0, ge=0),  # 시작 위치
     db: Session = Depends(get_db)
 ):
-    total = db.query(Post).count()  # 전체 게시글 개수
-    posts = db.query(Post).offset(offset).limit(limit).all()
-    return {"total": total, "posts": posts}
+    try:
+        total = db.query(Post).count()  # 전체 게시글 개수
+        posts = db.query(Post).offset(offset).limit(limit).all()
+        return {"total": total, "posts": posts}
+    except Exception as e:
+        print(f"Error in get_posts: {e}")
+        raise HTTPException(status_code=500, detail="게시글을 가져오는 데 실패했습니다.")
+
 
 
 @app.post("/posts", response_model=PostResponse)
