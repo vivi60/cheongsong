@@ -58,17 +58,19 @@ class Comment(Base):
     post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
     parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)
 
-    # 관계 설정
-    post = relationship("Post", back_populates="comments")  # 게시글과의 관계
+    # 게시글과의 관계
+    post = relationship("Post", back_populates="comments")
+
+    # 부모 댓글과 자식 댓글 관계
     parent = relationship(
         "Comment",
-        back_populates="replies",
-        remote_side=[id]  # 부모 댓글을 참조하도록 설정
+        remote_side=[id],
+        back_populates="replies"
     )
     replies = relationship(
         "Comment",
         back_populates="parent",
-        cascade="all, delete-orphan"  # 부모 댓글 삭제 시 자식 댓글 삭제
+        cascade="all, delete-orphan"
     )
 
 
@@ -187,7 +189,7 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
 
 @app.get("/posts/{post_id}/comments", response_model=list[CommentResponse])
 def get_comments(post_id: int, db: Session = Depends(get_db)):
-    comments = db.query(Comment).filter(Comment.post_id == post_id).all()
+    comments = db.query(Comment).filter(Comment.post_id == post_id, Comment.parent_id == None).all()
     # 각 댓글에 대한 대댓글 조회
     for comment in comments:
         comment.replies = db.query(Reply).filter(Reply.comment_id == comment.id).all()
