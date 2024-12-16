@@ -313,7 +313,6 @@ async function addReply(commentId, postId) {
 
 
 
-// 댓글 렌더링 수정: 대댓글 포함
 function renderComments(comments, postId) {
     const commentList = document.querySelector(`#comments-${postId} .comment-list`);
     commentList.innerHTML = ""; // 댓글 초기화
@@ -323,23 +322,23 @@ function renderComments(comments, postId) {
         commentElement.className = "comment";
         commentElement.dataset.id = comment.id;
 
-        // 대댓글 렌더링 포함
+        // 대댓글 HTML 생성
         const repliesHtml = (comment.replies || []).map(reply => `
-    <div class="reply">
-        <div class="reply-content">${reply.content}</div>
-        <div class="reply-actions">
-            ${canEditDelete(reply.author) ? `<button onclick="deleteReply('${reply.id}', ${postId}, '${comment.id}')">삭제</button>` : ""}
-        </div>
-    </div>
-`).join("");
+            <div class="reply">
+                <div class="reply-content">${reply.content}</div>
+                <div class="reply-actions">
+                    ${canEditDelete(reply.author) ? `<button onclick="deleteReply('${reply.id}', ${postId}, '${comment.id}')">삭제</button>` : ""}
+                </div>
+            </div>
+        `).join("");
 
-
+        // 댓글 및 대댓글 표시
         commentElement.innerHTML = `
             <div class="comment-content">${comment.content}</div>
             <div class="comment-actions">
                 <button onclick="addReply('${comment.id}', ${postId})">대댓글 작성</button>
                 ${canEditDelete(comment.author) ? `
-                <button onclick="deleteComment('${comment.id}', ${postId})">삭제</button>
+                    <button onclick="deleteComment('${comment.id}', ${postId})">삭제</button>
                 ` : ""}
             </div>
             <div class="reply-list">${repliesHtml}</div>
@@ -348,6 +347,7 @@ function renderComments(comments, postId) {
         commentList.appendChild(commentElement);
     });
 }
+
 
 // 대댓글 삭제
 async function deleteReply(replyId, postId, commentId) {
