@@ -57,11 +57,12 @@ class Comment(Base):
     post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
     parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)  # 부모 댓글 ID
     post = relationship("Post", back_populates="comments")
-    replies = relationship(
-        "Comment",  # 같은 Comment 테이블에서 참조
-        backref="parent",  # 역방향 관계
-        cascade="all, delete-orphan"
-    )
+    
+    # 부모 댓글을 참조
+    parent = relationship("Comment", back_populates="replies", remote_side=[id])
+    # 자식 댓글들
+    replies = relationship("Comment", back_populates="parent", cascade="all, delete-orphan")
+
 
 
 class Reply(Base):
