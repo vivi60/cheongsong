@@ -1,4 +1,3 @@
-
 const API_URL = "https://cheongsongdae.onrender.com"; // FastAPI 서버 주소
 
 
