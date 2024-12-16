@@ -45,37 +45,16 @@ class Post(Base):
     title = Column(String(100), nullable=False)
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
-    # Comment와의 관계 설정
     comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
-
 
 class Comment(Base):
     __tablename__ = "comments"
-
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
     post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
-    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)
-
-    # 게시글과의 관계
     post = relationship("Post", back_populates="comments")
-
-    # 부모 댓글과 대댓글 관계
-    parent = relationship(
-        "Comment",
-        remote_side=[id],
-        back_populates="replies"
-    )
-    replies = relationship(
-        "Comment",
-        back_populates="parent",
-        cascade="all, delete-orphan"
-    )
-
-
-
-
+    replies = relationship("Reply", back_populates="comment", cascade="all, delete-orphan")
 
 class Reply(Base):
     __tablename__ = "replies"
@@ -85,18 +64,21 @@ class Reply(Base):
     comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
     comment = relationship("Comment", back_populates="replies")
 
-
-
-
 # 데이터베이스 테이블 존재 여부 및 초기화
 @app.on_event("startup")
 async def startup_event():
     print(f"Using database file at: {DATABASE_URL}")
-    Base.metadata.drop_all(bind=engine)  # 기존 테이블 삭제
-    Base.metadata.create_all(bind=engine)  # 새 테이블 생성
-    print("Database tables recreated successfully.")
-
-
+    try:
+        # 테이블 존재 여부를 SQL로 직접 확인
+        with engine.connect() as connection:
+            result = connection.execute(text("SELECT name FROM sqlite_master WHERE type='table' AND name='posts';"))
+            if result.fetchone() is None:  # 테이블이 없으면 생성
+                Base.metadata.create_all(bind=engine)
+                print("Created missing tables.")
+            else:
+                print("All required tables already exist.")
+    except Exception as e:
+        print(f"Error during startup table check: {e}")
 
         
 # Pydantic 스키마 정의
@@ -110,23 +92,15 @@ class PostResponse(PostCreate):
     class Config:
         from_attributes = True
 
-# Pydantic 모델 정의
 class CommentCreate(BaseModel):
     content: str
     author: str
-    parent_id: int | None = None  # 대댓글인 경우 parent_id를 지정
 
-class CommentResponse(BaseModel):
+class CommentResponse(CommentCreate):
     id: int
-    content: str
-    author: str
-    parent_id: int | None
-    replies: list["CommentResponse"] = []
-
+    post_id: int
     class Config:
-        orm_mode = True
         from_attributes = True
-
 
 class ReplyCreate(BaseModel):
     content: str
@@ -143,12 +117,9 @@ class ReplyCreate(BaseModel):
             raise ValueError("Both content and author are required for a reply.")
         super().__init__(**data)
 
-class ReplyResponse(BaseModel):
+class ReplyResponse(ReplyCreate):
     id: int
-    content: str
-    author: str
     comment_id: int
-
     class Config:
         from_attributes = True
 
@@ -191,30 +162,18 @@ def delete_post(post_id: int, db: Session = Depends(get_db)):
 
 @app.get("/posts/{post_id}/comments", response_model=list[CommentResponse])
 def get_comments(post_id: int, db: Session = Depends(get_db)):
-    comments = db.query(Comment).filter(Comment.post_id == post_id, Comment.parent_id == None).all()
-    return comments
-
-
+    return db.query(Comment).filter(Comment.post_id == post_id).all()
 
 @app.post("/posts/{post_id}/comments", response_model=CommentResponse)
 def add_comment(post_id: int, comment: CommentCreate, db: Session = Depends(get_db)):
     db_post = db.query(Post).filter(Post.id == post_id).first()
     if not db_post:
         raise HTTPException(status_code=404, detail="Post not found")
-
-    new_comment = Comment(
-        content=comment.content,
-        author=comment.author,
-        post_id=post_id,
-        parent_id=comment.parent_id  # 대댓글인 경우 parent_id를 설정
-    )
+    new_comment = Comment(content=comment.content, author=comment.author, post_id=post_id)
     db.add(new_comment)
     db.commit()
     db.refresh(new_comment)
     return new_comment
-
-
-
 
 @app.delete("/posts/{post_id}/comments/{comment_id}")
 def delete_comment(post_id: int, comment_id: int, db: Session = Depends(get_db)):
