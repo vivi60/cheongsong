@@ -52,11 +52,7 @@ class Comment(Base):
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
-    post_id = Column(Integer, ForeignKey("posts.id"), nullable=True)
-    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)  # 자기 참조 관계
-    post = relationship("Post", back_populates="comments")
-    replies = relationship("Comment", back_populates="parent", cascade="all, delete-orphan")
-    parent = relationship("Comment", remote_side=[id])
+    replies = relationship("Reply", back_populates="comment", cascade="all, delete-orphan")
 
 class Reply(Base):
     __tablename__ = "replies"
@@ -65,6 +61,7 @@ class Reply(Base):
     author = Column(String(50), nullable=False)
     comment_id = Column(Integer, ForeignKey("comments.id"), nullable=False)
     comment = relationship("Comment", back_populates="replies")
+
 
 # 데이터베이스 테이블 존재 여부 및 초기화
 @app.on_event("startup")
