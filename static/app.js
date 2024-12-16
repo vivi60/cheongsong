@@ -92,7 +92,7 @@ newPostForm.addEventListener("submit", async (e) => {
 
     try {
         // API 호출
-        const response = await fetch(`${API_URL}/posts`, { // 백틱 사용
+        const response = await fetch(${API_URL}/posts, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -108,7 +108,7 @@ newPostForm.addEventListener("submit", async (e) => {
         if (!response.ok) {
             const errorData = await response.json();
             console.error("게시글 추가 실패:", errorData);
-            alert(`게시글 추가 실패: ${errorData.detail || response.statusText}`); // 백틱으로 수정
+            alert(게시글 추가 실패: ${errorData.detail || response.statusText});
             return;
         }
 
@@ -125,7 +125,6 @@ newPostForm.addEventListener("submit", async (e) => {
 });
 
 
-
 // 게시글 렌더링
 function renderPosts(posts) {
     postList.innerHTML = ""; // 게시글 목록 초기화
@@ -136,12 +135,12 @@ function renderPosts(posts) {
         postElement.className = "post";
         postElement.dataset.id = post.id;
 
-        postElement.innerHTML = `
+        postElement.innerHTML = 
             <div class="post-header">
                 <h2 class="post-title">${post.title}</h2>
                 ${
                     canEditDelete(post.author) // 글쓴 사람이나 관리자인 경우에만 메뉴 표시
-                        ? ` 
+                        ? 
                 <div class="menu-container">
                     <button class="menu-btn">⋮</button>
                     <div id="menu-${post.id}" class="menu-dropdown hidden">
@@ -150,7 +149,7 @@ function renderPosts(posts) {
                     </div>
                 </div>
                 
-                      ` : ""
+                        : ""
                 }
             </div>
             <div>
@@ -161,7 +160,7 @@ function renderPosts(posts) {
                 <input type="text" placeholder="댓글을 입력하세요" onkeydown="addComment(event, ${post.id})">
                 <div class="comment-list"></div>
             </div>
-        `;
+        ;
 
         postList.appendChild(postElement);
         fetchComments(post.id); // 댓글 로드
@@ -203,10 +202,9 @@ function setupMenuEvents() {
 
 // 댓글 섹션 토글
 function toggleCommentSection(postId) {
-    const commentSection = document.getElementById(`comments-${postId}`);
+    const commentSection = document.getElementById(comments-${postId});
     commentSection.classList.toggle("hidden");
 }
-
 
 // 댓글 가져오기
 async function fetchComments(postId) {
