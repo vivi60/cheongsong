@@ -128,9 +128,7 @@ newPostForm.addEventListener("submit", async (e) => {
 // 게시글 렌더링
 function renderPosts(posts) {
     postList.innerHTML = ""; // 게시글 목록 초기화
-
-    // 게시글을 최신 순서대로 렌더링
-    posts.slice().reverse().forEach((post) => {
+    posts.forEach((post) => {
         const postElement = document.createElement("div");
         postElement.className = "post";
         postElement.dataset.id = post.id;
@@ -138,19 +136,15 @@ function renderPosts(posts) {
         postElement.innerHTML = 
             <div class="post-header">
                 <h2 class="post-title">${post.title}</h2>
-                ${
-                    canEditDelete(post.author) // 글쓴 사람이나 관리자인 경우에만 메뉴 표시
-                        ? 
-                <div class="menu-container">
-                    <button class="menu-btn">⋮</button>
-                    <div id="menu-${post.id}" class="menu-dropdown hidden">
-                        <button onclick="editPost(${post.id})">수정</button>
-                        <button onclick="deletePost(${post.id})">삭제</button>
-                    </div>
+                <button class="menu-btn">⋮</button>
+
+            <div class="menu">
+                ${canEditDelete(post.author) ? 
+                <div id="menu-${post.id}" class="menu-dropdown hidden">
+                    <button onclick="editPost(${post.id})">수정</button>
+                    <button onclick="deletePost(${post.id})">삭제</button>
                 </div>
-                
-                        : ""
-                }
+                 : ""}
             </div>
             <div>
                 <p class="post-content">${post.content}</p>
@@ -171,10 +165,8 @@ function renderPosts(posts) {
 
 // 권한 확인
 function canEditDelete(author) {
-    // 현재 사용자가 admin이거나 글쓴 사람이면 true 반환
-    return currentUser && (currentUser.role === "admin" || currentUser.username === author);
+    return currentUser.role === "admin" || currentUser.username === author;
 }
-
 
 // 메뉴 토글
 function setupMenuEvents() {
@@ -232,12 +224,11 @@ function renderComments(comments, postId) {
         commentElement.innerHTML = 
             <div class="comment-content">${comment.content}</div>
             <div class="comment-actions">
-                <button onclick="addReply('${comment.id}', ${postId})">대댓글 작성</button>
                 ${canEditDelete(comment.author) ? 
-                <button onclick="deleteComment('${comment.id}', ${postId})">삭제</button>
+                <button onclick="editComment(${comment.id}, ${postId})">대댓글</button>
+                <button onclick="deleteComment(${comment.id}, ${postId})">삭제</button>
                  : ""}
             </div>
-
         ;
 
         commentList.appendChild(commentElement);
@@ -292,24 +283,19 @@ async function addReply(commentId, postId) {
             const response = await fetch(${API_URL}/posts/${postId}/comments/${commentId}/replies, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    content: replyText, // "content" 키 사용
-                    author: currentUser.username
-                })
+                body: JSON.stringify({ text: replyText, author: currentUser.username }) // 필드 이름 수정
             });
 
             if (response.ok) {
                 fetchComments(postId); // 댓글과 대댓글 새로고침
             } else {
                 console.error("대댓글 추가 실패:", response.status);
-                alert("대댓글 추가 실패: 서버 오류");
             }
         } catch (error) {
             console.error("대댓글 추가 중 오류:", error);
         }
     }
 }
-
 
 
 // 댓글 렌더링 수정: 대댓글 포함
@@ -336,8 +322,8 @@ function renderComments(comments, postId) {
         commentElement.innerHTML = 
             <div class="comment-content">${comment.content}</div>
             <div class="comment-actions">
-                <button onclick="addReply('${comment.id}', ${postId})">대댓글 작성</button>
                 ${canEditDelete(comment.author) ? 
+                <button onclick="addReply('${comment.id}', ${postId})">대댓글 작성</button>
                 <button onclick="deleteComment('${comment.id}', ${postId})">삭제</button>
                  : ""}
             </div>
