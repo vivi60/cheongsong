@@ -52,9 +52,11 @@ class Comment(Base):
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
-    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=True)
+    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)  # 자기 참조 관계
     post = relationship("Post", back_populates="comments")
-    replies = relationship("Reply", back_populates="comment", cascade="all, delete-orphan")
+    replies = relationship("Comment", back_populates="parent", cascade="all, delete-orphan")
+    parent = relationship("Comment", remote_side=[id])
 
 class Reply(Base):
     __tablename__ = "replies"
@@ -92,18 +94,21 @@ class PostResponse(PostCreate):
     class Config:
         from_attributes = True
 
+# Pydantic 모델 정의
 class CommentCreate(BaseModel):
     content: str
     author: str
+    parent_id: int | None = None  # 대댓글인 경우 parent_id를 지정
 
 class CommentResponse(BaseModel):
     id: int
     content: str
     author: str
-    post_id: int
-    replies: list["ReplyResponse"] = []  # Forward Reference로 수정
+    parent_id: int | None
+    replies: list["CommentResponse"] = []
 
     class Config:
+        orm_mode = True
         from_attributes = True
 
 
@@ -182,11 +187,17 @@ def add_comment(post_id: int, comment: CommentCreate, db: Session = Depends(get_
     db_post = db.query(Post).filter(Post.id == post_id).first()
     if not db_post:
         raise HTTPException(status_code=404, detail="Post not found")
-    new_comment = Comment(content=comment.content, author=comment.author, post_id=post_id)
+    new_comment = Comment(
+        content=comment.content,
+        author=comment.author,
+        post_id=post_id,
+        parent_id=comment.parent_id  # 대댓글이면 부모 ID를 저장
+    )
     db.add(new_comment)
     db.commit()
     db.refresh(new_comment)
     return new_comment
+
 
 @app.delete("/posts/{post_id}/comments/{comment_id}")
 def delete_comment(post_id: int, comment_id: int, db: Session = Depends(get_db)):
