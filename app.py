@@ -55,20 +55,20 @@ class Comment(Base):
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
-    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)  # 게시글 ID
-    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)  # 부모 댓글 ID (nullable)
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
+    parent_id = Column(Integer, ForeignKey("comments.id"), nullable=True)
 
     # 관계 설정
     post = relationship("Post", back_populates="comments")  # 게시글과의 관계
     parent = relationship(
         "Comment",
         back_populates="replies",
-        remote_side=[id],  # 부모 댓글 참조
+        remote_side=[id]  # 부모 댓글을 참조하도록 설정
     )
     replies = relationship(
         "Comment",
         back_populates="parent",
-        cascade="all, delete-orphan",  # 부모 댓글 삭제 시 자식 댓글 삭제
+        cascade="all, delete-orphan"  # 부모 댓글 삭제 시 자식 댓글 삭제
     )
 
 
