@@ -203,9 +203,10 @@ function setupMenuEvents() {
 
 // 댓글 섹션 토글
 function toggleCommentSection(postId) {
-    const commentSection = document.getElementById(comments-${postId});
+    const commentSection = document.getElementById(`comments-${postId}`);
     commentSection.classList.toggle("hidden");
 }
+
 
 // 댓글 가져오기
 async function fetchComments(postId) {
