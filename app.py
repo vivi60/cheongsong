@@ -101,10 +101,11 @@ class CommentResponse(BaseModel):
     content: str
     author: str
     post_id: int
-    replies: list[ReplyResponse] = []  # 대댓글 필드 추가
+    replies: list["ReplyResponse"] = []  # Forward Reference로 수정
 
     class Config:
         from_attributes = True
+
 
 class ReplyCreate(BaseModel):
     content: str
