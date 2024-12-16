@@ -45,6 +45,7 @@ class Post(Base):
     title = Column(String(100), nullable=False)
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
+    # Comment와의 관계 설정
     comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
 
 class Comment(Base):
@@ -52,7 +53,10 @@ class Comment(Base):
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
-    replies = relationship("Reply", back_populates="comment", cascade="all, delete-orphan")
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)  # 외래 키 설정
+    # Post와의 관계 설정
+    post = relationship("Post", back_populates="comments")
+
 
 class Reply(Base):
     __tablename__ = "replies"
