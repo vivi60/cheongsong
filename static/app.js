@@ -293,19 +293,24 @@ async function addReply(commentId, postId) {
             const response = await fetch(`${API_URL}/posts/${postId}/comments/${commentId}/replies`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ text: replyText, author: currentUser.username }) // 필드 이름 수정
+                body: JSON.stringify({
+                    content: replyText, // "content" 키 사용
+                    author: currentUser.username
+                })
             });
 
             if (response.ok) {
                 fetchComments(postId); // 댓글과 대댓글 새로고침
             } else {
                 console.error("대댓글 추가 실패:", response.status);
+                alert("대댓글 추가 실패: 서버 오류");
             }
         } catch (error) {
             console.error("대댓글 추가 중 오류:", error);
         }
     }
 }
+
 
 
 // 댓글 렌더링 수정: 대댓글 포함
