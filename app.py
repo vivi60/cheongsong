@@ -151,6 +151,7 @@ def get_posts(
 
 
 
+
 @app.post("/posts", response_model=PostResponse)
 def create_post(post: PostCreate, db: Session = Depends(get_db)):
     new_post = Post(**post.dict())
