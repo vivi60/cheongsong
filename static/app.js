@@ -213,37 +213,50 @@ async function fetchComments(postId) {
         const response = await fetch(`${API_URL}/posts/${postId}/comments`);
         if (response.ok) {
             const comments = await response.json();
-            renderComments(comments, postId);
+            const commentList = document.querySelector(`#comments-${postId} .comment-list`);
+            renderComments(comments, commentList); // 재귀 렌더링 함수 호출
         }
     } catch (error) {
         console.error("댓글 로드 중 오류:", error);
     }
 }
 
+
 // 댓글 렌더링
-function renderComments(comments, postId) {
-    const commentList = document.querySelector(`#comments-${postId} .comment-list`);
-    commentList.innerHTML = ""; // 댓글 초기화
+function renderComments(comments, container) {
+    container.innerHTML = ""; // 댓글 초기화
 
     comments.forEach((comment) => {
         const commentElement = document.createElement("div");
         commentElement.className = "comment";
         commentElement.dataset.id = comment.id;
 
+        // 대댓글 리스트를 담을 컨테이너
+        const replyContainer = document.createElement("div");
+        replyContainer.className = "reply-list";
+
+        // 재귀적으로 replies를 렌더링
+        if (comment.replies && comment.replies.length > 0) {
+            renderComments(comment.replies, replyContainer);
+        }
+
+        // 댓글 및 대댓글 작성 버튼 표시
         commentElement.innerHTML = `
             <div class="comment-content">${comment.content}</div>
             <div class="comment-actions">
-                <button onclick="addReply('${comment.id}', ${postId})">대댓글 작성</button>
+                <button onclick="addReply('${comment.id}', ${comment.post_id})">대댓글 작성</button>
                 ${canEditDelete(comment.author) ? `
-                <button onclick="deleteComment('${comment.id}', ${postId})">삭제</button>
+                <button onclick="deleteComment('${comment.id}', ${comment.post_id})">삭제</button>
                 ` : ""}
             </div>
-
         `;
 
-        commentList.appendChild(commentElement);
+        // 댓글에 대댓글 컨테이너 추가
+        commentElement.appendChild(replyContainer);
+        container.appendChild(commentElement);
     });
 }
+
 
 // 댓글 추가
 async function addComment(event, postId) {
@@ -290,17 +303,18 @@ async function addReply(commentId, postId) {
     const replyText = prompt("대댓글을 입력하세요:");
     if (replyText) {
         try {
-            const response = await fetch(`${API_URL}/posts/${postId}/comments/${commentId}/replies`, {
+            const response = await fetch(`${API_URL}/posts/${postId}/comments`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    content: replyText, // "content" 키 사용
-                    author: currentUser.username
+                    content: replyText,
+                    author: currentUser.username,
+                    parent_id: commentId // 부모 댓글 ID를 지정
                 })
             });
 
             if (response.ok) {
-                fetchComments(postId); // 댓글과 대댓글 새로고침
+                fetchComments(postId); // 댓글 및 대댓글 새로고침
             } else {
                 console.error("대댓글 추가 실패:", response.status);
                 alert("대댓글 추가 실패: 서버 오류");
@@ -311,42 +325,6 @@ async function addReply(commentId, postId) {
     }
 }
 
-
-
-function renderComments(comments, postId) {
-    const commentList = document.querySelector(`#comments-${postId} .comment-list`);
-    commentList.innerHTML = ""; // 댓글 초기화
-
-    comments.forEach((comment) => {
-        const commentElement = document.createElement("div");
-        commentElement.className = "comment";
-        commentElement.dataset.id = comment.id;
-
-        // 대댓글 HTML 생성
-        const repliesHtml = (comment.replies || []).map(reply => `
-            <div class="reply">
-                <div class="reply-content">${reply.content}</div>
-                <div class="reply-actions">
-                    ${canEditDelete(reply.author) ? `<button onclick="deleteReply('${reply.id}', ${postId}, '${comment.id}')">삭제</button>` : ""}
-                </div>
-            </div>
-        `).join("");
-
-        // 댓글 및 대댓글 표시
-        commentElement.innerHTML = `
-            <div class="comment-content">${comment.content}</div>
-            <div class="comment-actions">
-                <button onclick="addReply('${comment.id}', ${postId})">대댓글 작성</button>
-                ${canEditDelete(comment.author) ? `
-                    <button onclick="deleteComment('${comment.id}', ${postId})">삭제</button>
-                ` : ""}
-            </div>
-            <div class="reply-list">${repliesHtml}</div>
-        `;
-
-        commentList.appendChild(commentElement);
-    });
-}
 
 
 // 대댓글 삭제
