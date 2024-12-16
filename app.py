@@ -48,15 +48,15 @@ class Post(Base):
     # Comment와의 관계 설정
     comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
 
+
 class Comment(Base):
     __tablename__ = "comments"
     id = Column(Integer, primary_key=True, index=True)
     content = Column(Text, nullable=False)
     author = Column(String(50), nullable=False)
-    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)  # 외래 키 설정
-    # Post와의 관계 설정
+    post_id = Column(Integer, ForeignKey("posts.id"), nullable=False)
     post = relationship("Post", back_populates="comments")
-
+    replies = relationship("Reply", back_populates="comment", cascade="all, delete-orphan")
 
 class Reply(Base):
     __tablename__ = "replies"
@@ -73,17 +73,8 @@ async def startup_event():
     print(f"Using database file at: {DATABASE_URL}")
     Base.metadata.drop_all(bind=engine)  # 기존 테이블 삭제
     Base.metadata.create_all(bind=engine)  # 새 테이블 생성
-    try:
-        # 테이블 존재 여부를 SQL로 직접 확인
-        with engine.connect() as connection:
-            result = connection.execute(text("SELECT name FROM sqlite_master WHERE type='table' AND name='posts';"))
-            if result.fetchone() is None:  # 테이블이 없으면 생성
-                Base.metadata.create_all(bind=engine)
-                print("Created missing tables.")
-            else:
-                print("All required tables already exist.")
-    except Exception as e:
-        print(f"Error during startup table check: {e}")
+    print("Database tables recreated successfully.")
+
 
         
 # Pydantic 스키마 정의
