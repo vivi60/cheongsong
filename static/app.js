@@ -93,7 +93,7 @@ newPostForm.addEventListener("submit", async (e) => {
 
     try {
         // API 호출
-        const response = await fetch(`${API_URL}/posts`, {
+        const response = await fetch(${API_URL}/posts, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -109,7 +109,7 @@ newPostForm.addEventListener("submit", async (e) => {
         if (!response.ok) {
             const errorData = await response.json();
             console.error("게시글 추가 실패:", errorData);
-            alert(`게시글 추가 실패: ${errorData.detail || response.statusText}`);
+            alert(게시글 추가 실패: ${errorData.detail || response.statusText});
             return;
         }
 
@@ -136,12 +136,12 @@ function renderPosts(posts) {
         postElement.className = "post";
         postElement.dataset.id = post.id;
 
-        postElement.innerHTML = `
+        postElement.innerHTML = 
             <div class="post-header">
                 <h2 class="post-title">${post.title}</h2>
                 ${
                     canEditDelete(post.author) // 글쓴 사람이나 관리자인 경우에만 메뉴 표시
-                        ? `
+                        ? 
                 <div class="menu-container">
                     <button class="menu-btn">⋮</button>
                     <div id="menu-${post.id}" class="menu-dropdown hidden">
@@ -149,7 +149,7 @@ function renderPosts(posts) {
                         <button onclick="deletePost(${post.id})">삭제</button>
                     </div>
                 </div>
-                `
+                
                         : ""
                 }
             </div>
@@ -161,7 +161,7 @@ function renderPosts(posts) {
                 <input type="text" placeholder="댓글을 입력하세요" onkeydown="addComment(event, ${post.id})">
                 <div class="comment-list"></div>
             </div>
-        `;
+        ;
 
         postList.appendChild(postElement);
         fetchComments(post.id); // 댓글 로드
@@ -203,60 +203,47 @@ function setupMenuEvents() {
 
 // 댓글 섹션 토글
 function toggleCommentSection(postId) {
-    const commentSection = document.getElementById(`comments-${postId}`);
+    const commentSection = document.getElementById(comments-${postId});
     commentSection.classList.toggle("hidden");
 }
 
 // 댓글 가져오기
 async function fetchComments(postId) {
     try {
-        const response = await fetch(`${API_URL}/posts/${postId}/comments`);
+        const response = await fetch(${API_URL}/posts/${postId}/comments);
         if (response.ok) {
             const comments = await response.json();
-            const commentList = document.querySelector(`#comments-${postId} .comment-list`);
-            renderComments(comments, commentList); // 재귀 렌더링 함수 호출
+            renderComments(comments, postId);
         }
     } catch (error) {
         console.error("댓글 로드 중 오류:", error);
     }
 }
 
-
 // 댓글 렌더링
-function renderComments(comments, container) {
-    container.innerHTML = ""; // 댓글 초기화
+function renderComments(comments, postId) {
+    const commentList = document.querySelector(#comments-${postId} .comment-list);
+    commentList.innerHTML = ""; // 댓글 초기화
 
     comments.forEach((comment) => {
         const commentElement = document.createElement("div");
         commentElement.className = "comment";
         commentElement.dataset.id = comment.id;
 
-        // 대댓글 리스트를 담을 컨테이너
-        const replyContainer = document.createElement("div");
-        replyContainer.className = "reply-list";
-
-        // 재귀적으로 replies를 렌더링
-        if (comment.replies && comment.replies.length > 0) {
-            renderComments(comment.replies, replyContainer);
-        }
-
-        // 댓글 및 대댓글 작성 버튼 표시
-        commentElement.innerHTML = `
+        commentElement.innerHTML = 
             <div class="comment-content">${comment.content}</div>
             <div class="comment-actions">
-                <button onclick="addReply('${comment.id}', ${comment.post_id})">대댓글 작성</button>
-                ${canEditDelete(comment.author) ? `
-                <button onclick="deleteComment('${comment.id}', ${comment.post_id})">삭제</button>
-                ` : ""}
+                <button onclick="addReply('${comment.id}', ${postId})">대댓글 작성</button>
+                ${canEditDelete(comment.author) ? 
+                <button onclick="deleteComment('${comment.id}', ${postId})">삭제</button>
+                 : ""}
             </div>
-        `;
 
-        // 댓글에 대댓글 컨테이너 추가
-        commentElement.appendChild(replyContainer);
-        container.appendChild(commentElement);
+        ;
+
+        commentList.appendChild(commentElement);
     });
 }
-
 
 // 댓글 추가
 async function addComment(event, postId) {
@@ -266,7 +253,7 @@ async function addComment(event, postId) {
 
         if (commentText) {
             try {
-                const response = await fetch(`${API_URL}/posts/${postId}/comments`, {
+                const response = await fetch(${API_URL}/posts/${postId}/comments, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ content: commentText, author: currentUser.username })
@@ -288,7 +275,7 @@ async function deleteComment(commentId, postId) {
     if (!confirm("이 댓글을 삭제하시겠습니까?")) return;
 
     try {
-        const response = await fetch(`${API_URL}/posts/${postId}/comments/${commentId}`, { method: "DELETE" });
+        const response = await fetch(${API_URL}/posts/${postId}/comments/${commentId}, { method: "DELETE" });
 
         if (response.ok) {
             fetchComments(postId);
@@ -303,18 +290,17 @@ async function addReply(commentId, postId) {
     const replyText = prompt("대댓글을 입력하세요:");
     if (replyText) {
         try {
-            const response = await fetch(`${API_URL}/posts/${postId}/comments`, {
+            const response = await fetch(${API_URL}/posts/${postId}/comments/${commentId}/replies, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    content: replyText,
-                    author: currentUser.username,
-                    parent_id: commentId // 부모 댓글 ID를 지정
+                    content: replyText, // "content" 키 사용
+                    author: currentUser.username
                 })
             });
 
             if (response.ok) {
-                fetchComments(postId); // 댓글 및 대댓글 새로고침
+                fetchComments(postId); // 댓글과 대댓글 새로고침
             } else {
                 console.error("대댓글 추가 실패:", response.status);
                 alert("대댓글 추가 실패: 서버 오류");
@@ -327,11 +313,47 @@ async function addReply(commentId, postId) {
 
 
 
+// 댓글 렌더링 수정: 대댓글 포함
+function renderComments(comments, postId) {
+    const commentList = document.querySelector(#comments-${postId} .comment-list);
+    commentList.innerHTML = ""; // 댓글 초기화
+
+    comments.forEach((comment) => {
+        const commentElement = document.createElement("div");
+        commentElement.className = "comment";
+        commentElement.dataset.id = comment.id;
+
+        // 대댓글 렌더링 포함
+        const repliesHtml = (comment.replies || []).map(reply => 
+    <div class="reply">
+        <div class="reply-content">${reply.content}</div>
+        <div class="reply-actions">
+            ${canEditDelete(reply.author) ? <button onclick="deleteReply('${reply.id}', ${postId}, '${comment.id}')">삭제</button> : ""}
+        </div>
+    </div>
+).join("");
+
+
+        commentElement.innerHTML = 
+            <div class="comment-content">${comment.content}</div>
+            <div class="comment-actions">
+                <button onclick="addReply('${comment.id}', ${postId})">대댓글 작성</button>
+                ${canEditDelete(comment.author) ? 
+                <button onclick="deleteComment('${comment.id}', ${postId})">삭제</button>
+                 : ""}
+            </div>
+            <div class="reply-list">${repliesHtml}</div>
+        ;
+
+        commentList.appendChild(commentElement);
+    });
+}
+
 // 대댓글 삭제
 async function deleteReply(replyId, postId, commentId) {
     if (confirm("대댓글을 삭제하시겠습니까?")) {
         try {
-            const response = await fetch(`${API_URL}/posts/${postId}/comments/${commentId}/replies/${replyId}`, {
+            const response = await fetch(${API_URL}/posts/${postId}/comments/${commentId}/replies/${replyId}, {
                 method: "DELETE"
             });
 
@@ -350,7 +372,7 @@ async function deleteReply(replyId, postId, commentId) {
 // 서버에 대댓글 저장
 async function saveReplyToServer(postId, commentId, replyText, replyId) {
     try {
-        const response = await fetch(`${API_URL}/posts/${postId}/comments/${commentId}/replies`, {
+        const response = await fetch(${API_URL}/posts/${postId}/comments/${commentId}/replies, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ content: replyText, author: currentUser.username })
@@ -371,7 +393,7 @@ async function deletePost(postId) {
     if (!confirm("정말 삭제하시겠습니까?")) return;
 
     try {
-        const response = await fetch(`${API_URL}/posts/${postId}`, { method: "DELETE" });
+        const response = await fetch(${API_URL}/posts/${postId}, { method: "DELETE" });
 
         if (response.ok) {
             fetchPosts();
@@ -386,7 +408,7 @@ async function fetchPosts(page = 1) {
     const offset = (page - 1) * postsPerPage;
 
     try {
-        const response = await fetch(`${API_URL}/posts?limit=${postsPerPage}&offset=${offset}`);
+        const response = await fetch(${API_URL}/posts?limit=${postsPerPage}&offset=${offset});
         if (response.ok) {
             const data = await response.json();
             console.log("Fetched posts:", data); // 데이터 확인
@@ -429,7 +451,7 @@ async function editPost(postId) {
     }
 
     try {
-        const response = await fetch(`${API_URL}/posts/${postId}`, {
+        const response = await fetch(${API_URL}/posts/${postId}, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
