@@ -3,6 +3,7 @@ const users = [
     { username: "admin", password: "admin123", role: "admin" },
     { username: "user1", password: "user123", role: "user" },
 ];
+
 const loginSection = document.getElementById("loginSection");
 const boardSection = document.getElementById("boardSection");
 const userRoleSpan = document.getElementById("userRole");
@@ -14,7 +15,7 @@ const paginationContainer = document.getElementById("pagination");
 let currentUser = null;
 let postsPerPage = 5;
 
-// 로그인 상태 확인
+// 페이지 로드 시 로그인 상태 확인
 window.addEventListener("DOMContentLoaded", () => {
     const storedUser = localStorage.getItem("loggedInUser");
     if (storedUser) {
@@ -37,7 +38,6 @@ function displayBoard() {
     fetchPosts(1);
 }
 
-// 로그인 처리
 document.getElementById("loginForm").addEventListener("submit", (e) => {
     e.preventDefault();
     const username = document.getElementById("username").value;
@@ -53,14 +53,12 @@ document.getElementById("loginForm").addEventListener("submit", (e) => {
     }
 });
 
-// 로그아웃
 logoutButton.addEventListener("click", () => {
     localStorage.removeItem("loggedInUser");
     currentUser = null;
     showLogin();
 });
 
-// 게시글 추가
 newPostForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const title = document.getElementById("title").value;
@@ -71,12 +69,10 @@ newPostForm.addEventListener("submit", async (e) => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, content, author: currentUser.username }),
     });
-
     fetchPosts(1);
     newPostForm.reset();
 });
 
-// 게시글 불러오기
 async function fetchPosts(page) {
     const offset = (page - 1) * postsPerPage;
     const response = await fetch(`${API_URL}/posts?limit=${postsPerPage}&offset=${offset}`);
@@ -87,7 +83,6 @@ async function fetchPosts(page) {
     renderPagination(data.total, page);
 }
 
-// 게시글 렌더링
 function renderPost(post) {
     const postElement = document.createElement("div");
     postElement.className = "post";
@@ -103,7 +98,6 @@ function renderPost(post) {
             </div>
         </div>
         <p>${post.content}</p>
-        <small>작성자: ${post.author}</small>
         <button onclick="toggleComments(${post.id})">댓글 보기</button>
         <div class="comment-section" id="comments-${post.id}"></div>
     `;
@@ -115,44 +109,31 @@ function renderPost(post) {
     });
 }
 
-// 댓글 토글
 function toggleComments(postId) {
-    const commentSection = document.getElementById(`comments-${postId}`);
-    commentSection.style.display = commentSection.style.display === "block" ? "none" : "block";
-    loadComments(postId, commentSection);
+    const section = document.getElementById(`comments-${postId}`);
+    section.style.display = section.style.display === "block" ? "none" : "block";
 }
 
-// 댓글 불러오기
-async function loadComments(postId, section) {
-    const response = await fetch(`${API_URL}/posts/${postId}/comments`);
-    const comments = await response.json();
-    section.innerHTML = comments.map(comment => `<p>${comment.content} - ${comment.author}</p>`).join("");
+async function deletePost(postId) {
+    await fetch(`${API_URL}/posts/${postId}`, { method: "DELETE" });
+    fetchPosts(1);
 }
 
-// 게시글 수정
 async function editPost(postId) {
     const newTitle = prompt("새 제목을 입력하세요:");
     const newContent = prompt("새 내용을 입력하세요:");
     await fetch(`${API_URL}/posts/${postId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: newTitle, content: newContent, author: currentUser.username }),
+        body: JSON.stringify({ title: newTitle, content: newContent }),
     });
     fetchPosts(1);
 }
 
-// 게시글 삭제
-async function deletePost(postId) {
-    if (confirm("정말 삭제하시겠습니까?")) {
-        await fetch(`${API_URL}/posts/${postId}`, { method: "DELETE" });
-        fetchPosts(1);
-    }
-}
-
-// 페이지네이션
 function renderPagination(total, currentPage) {
     paginationContainer.innerHTML = "";
     const totalPages = Math.ceil(total / postsPerPage);
+
     for (let i = 1; i <= totalPages; i++) {
         const button = document.createElement("button");
         button.textContent = i;
