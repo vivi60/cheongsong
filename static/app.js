@@ -98,7 +98,7 @@ function renderPost(post) {
             </div>
         </div>
         <p>${post.content}</p>
-        <button onclick="toggleComments(${post.id})">댓글 보기</button>
+        <button class="comment-btn" onclick="toggleComments(${post.id})">댓글 보기</button>
         <div class="comment-section" id="comments-${post.id}"></div>
     `;
     postList.appendChild(postElement);
