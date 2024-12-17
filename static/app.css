@@ -126,29 +126,27 @@ form button:hover {
 
 .menu-dropdown {
     position: absolute;
-    top: 25px;
+    top: 25px; /* 드롭다운 위치 조정 */
     right: 0;
     background: white;
     border: 1px solid #ddd;
-    display: flex; /* flexbox 활성화 */
-    flex-direction: row; /* 가로 정렬 */
-    align-items: center; /* 수직 정렬 */
-    justify-content: center; /* 수평 정렬 */
-    border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    z-index: 100;
-    padding: 5px 0; /* 상하 여백 추가 */
+    border-radius: 5px;
+    display: flex; /* 가로 정렬을 위해 flex 사용 */
+    gap: 10px; /* 버튼 사이 여백 추가 */
+    align-items: center; /* 버튼들을 수직 가운데 정렬 */
+    padding: 5px 10px; /* 내부 여백 */
+    z-index: 10;
 }
 
 .menu-dropdown button {
     background: none;
     border: none;
-    padding: 8px 12px; /* 버튼 내부 간격 설정 */
+    padding: 5px 10px; /* 버튼 내부 간격 설정 */
     font-size: 14px;
     cursor: pointer;
     color: #333;
     white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-    text-align: center;
     transition: background-color 0.3s ease;
 }
 
@@ -162,19 +160,27 @@ form button:hover {
 
 /* 댓글 보기 버튼 */
 .comment-btn {
-    margin-top: 10px;
-    background-color: #e60009;
-    color: white;
-    border: none;
-    padding: 8px 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 12px;
-    transition: background-color 0.3s ease;
+    background-color: #e60009; /* 빨간색 배경 */
+    color: white; /* 글자색 */
+    border: none; /* 테두리 제거 */
+    padding: 8px 12px; /* 안쪽 여백 */
+    font-size: 14px; /* 글자 크기 */
+    border-radius: 5px; /* 둥근 테두리 */
+    cursor: pointer; /* 마우스 오버 시 포인터 */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* 부드러운 효과 */
+    display: inline-block; /* 버튼을 인라인 블록으로 표시 */
+    text-align: center; /* 텍스트 가운데 정렬 */
 }
 
 .comment-btn:hover {
-    background-color: #b80006;
+    background-color: #b80006; /* 진한 빨간색으로 변경 */
+    transform: scale(1.05); /* 확대 효과 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 추가 */
+}
+
+.comment-btn:active {
+    transform: scale(1); /* 클릭 시 원래 크기로 */
+    box-shadow: none;
 }
 
 /* 댓글 섹션 */
