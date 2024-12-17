@@ -130,20 +130,20 @@ form button:hover {
     right: 0;
     background: white;
     border: 1px solid #ddd;
-    display: none;
-    flex-direction: row; /* 가로 정렬로 수정 */
+    display: flex; /* flexbox 활성화 */
+    flex-direction: row; /* 가로 정렬 */
     align-items: center; /* 수직 정렬 */
+    justify-content: center; /* 수평 정렬 */
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     z-index: 100;
-    padding: 5px;
-    gap: 5px; /* 버튼 간격 추가 */
+    padding: 5px 0; /* 상하 여백 추가 */
 }
 
 .menu-dropdown button {
     background: none;
     border: none;
-    padding: 5px 10px; /* 버튼 내부 간격 설정 */
+    padding: 8px 12px; /* 버튼 내부 간격 설정 */
     font-size: 14px;
     cursor: pointer;
     color: #333;
