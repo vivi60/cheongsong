@@ -204,7 +204,7 @@ form button:hover {
 .comment-input {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .comment-input input {
@@ -218,14 +218,19 @@ form button:hover {
     background-color: #e60009;
     color: white;
     border: none;
-    border-radius: 5px;
     padding: 8px 12px;
+    border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
 }
 
 .comment-input button:hover {
     background-color: #b80006;
+}
+
+.no-comments {
+    color: #888;
+    font-style: italic;
+    margin: 10px 0;
 }
 
 .comment-list {
