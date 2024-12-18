@@ -14,7 +14,7 @@ const postList = document.getElementById("postList");
 const paginationContainer = document.getElementById("pagination");
 
 let currentUser = null;
-let postsPerPage = 5;
+let postsPerPage = 10;
 
 // 페이지 로드 시 로그인 상태 확인
 window.addEventListener("DOMContentLoaded", async () => {
