@@ -114,7 +114,7 @@ function renderPosts(posts) {
     posts.reverse().forEach((post) => {
         const postElement = document.createElement("div");
         postElement.className = "post";
-        postElement.setAttribute("data-post-id", post.id); // data-post-id 속성 추가
+        postElement.setAttribute("data-post", JSON.stringify(post)); // 전체 게시글 데이터 저장
 
         postElement.innerHTML = `
             <div class="post-header">
@@ -324,36 +324,29 @@ async function deletePost(postId) {
     }
 }
 
-async function editPost(postId) {
-    try {
-        // 서버에서 현재 게시글 데이터 가져오기
-        const response = await fetch(`${API_URL}/posts/${postId}`);
-        if (!response.ok) {
-            throw new Error("게시글을 불러올 수 없습니다.");
-        }
 
-        const post = await response.json();
-
-        // 수정 UI 동적으로 생성
-        const postElement = document.querySelector(`[data-post-id="${postId}"]`);
-        if (!postElement) {
-            throw new Error("게시글 요소를 찾을 수 없습니다.");
-        }
-
-        // 기존 게시글 내용 숨기기
-        postElement.innerHTML = `
-            <div class="edit-post">
-                <input type="text" id="edit-title-${postId}" value="${post.title}" placeholder="제목" />
-                <textarea id="edit-content-${postId}" rows="4">${post.content}</textarea>
-                <button onclick="saveEditPost(${postId})">저장</button>
-                <button onclick="cancelEditPost(${postId})">취소</button>
-            </div>
-        `;
-    } catch (error) {
-        console.error("게시글 수정 중 오류:", error);
-        alert("게시글을 불러오는 중 오류가 발생했습니다.");
+//게시글수정
+function editPost(postId) {
+    const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+    if (!postElement) {
+        alert("게시글을 찾을 수 없습니다.");
+        return;
     }
+
+    // 데이터 가져오기
+    const post = JSON.parse(postElement.getAttribute("data-post"));
+
+    // 수정 UI 생성
+    postElement.innerHTML = `
+        <div class="edit-post">
+            <input type="text" id="edit-title-${postId}" value="${post.title}" placeholder="제목" />
+            <textarea id="edit-content-${postId}" rows="4">${post.content}</textarea>
+            <button onclick="saveEditPost(${postId})">저장</button>
+            <button onclick="cancelEditPost(${postId})">취소</button>
+        </div>
+    `;
 }
+
 
 // 수정 내용 저장
 async function saveEditPost(postId) {
@@ -383,6 +376,7 @@ async function saveEditPost(postId) {
         alert("게시글을 저장하는 중 오류가 발생했습니다.");
     }
 }
+
 
 // 수정 취소
 function cancelEditPost(postId) {
