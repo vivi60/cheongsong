@@ -130,27 +130,28 @@ form button:hover {
 }
 
 .menu-dropdown {
-    display: none;
+    display: none; /* 기본적으로 숨김 */
     position: absolute;
-    top: 25px; /* 위치 조정 */
+    top: 25px;
     right: 0;
     background: white;
     border: 1px solid #ddd;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    gap: 10px;
     padding: 5px 10px;
     z-index: 10;
+}
+
+.menu-dropdown.hidden {
+    display: none; /* 숨김 */
 }
 
 .menu-dropdown button {
     background: none;
     border: none;
-    padding: 5px 10px; /* 버튼 내부 간격 설정 */
+    padding: 5px 10px;
     font-size: 14px;
     cursor: pointer;
-    color: #333;
-    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
     transition: background-color 0.3s ease;
 }
 
