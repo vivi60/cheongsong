@@ -125,16 +125,16 @@ form button:hover {
 }
 
 .menu-dropdown {
+    display: none;
     position: absolute;
-    top: 25px; /* 드롭다운 위치 조정 */
+    top: 25px; /* 위치 조정 */
     right: 0;
     background: white;
     border: 1px solid #ddd;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    gap: 10px; /* 버튼 사이 여백 추가 */
-    align-items: center; /* 버튼들을 수직 가운데 정렬 */
-    padding: 5px 10px; /* 내부 여백 */
+    gap: 10px;
+    padding: 5px 10px;
     z-index: 10;
 }
 
