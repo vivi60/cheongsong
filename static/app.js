@@ -175,13 +175,14 @@ function toggleCommentSection(postId) {
     const commentSection = document.getElementById(`comments-${postId}`);
     if (commentSection.classList.contains("hidden")) {
         console.log(`댓글 보기 버튼 클릭됨: postId = ${postId}`);
-        fetchComments(postId); // 댓글 데이터 불러오기
-        commentSection.classList.remove("hidden");
+        fetchComments(postId); // 댓글 불러오기
+        commentSection.classList.remove("hidden"); // hidden 클래스 제거
     } else {
         console.log(`댓글 창 숨기기: postId = ${postId}`);
-        commentSection.classList.add("hidden");
+        commentSection.classList.add("hidden"); // 다시 숨기기
     }
 }
+
 
 
 // 댓글 불러오기
@@ -193,7 +194,7 @@ async function fetchComments(postId) {
         const response = await fetch(`${API_URL}/posts/${postId}/comments`);
         if (response.ok) {
             const comments = await response.json();
-            console.log("불러온 댓글 데이터:", comments); // 서버에서 가져온 댓글 로그 출력
+            console.log("서버 응답 댓글 데이터:", comments); // 댓글 데이터 확인
             renderComments(comments, commentSection);
         } else {
             console.error("댓글 불러오기 실패, 상태코드:", response.status);
@@ -215,6 +216,7 @@ function renderComments(comments, container) {
         return;
     }
 
+    // 댓글 데이터 반복 출력
     comments.forEach((comment) => {
         const commentDiv = document.createElement("div");
         commentDiv.className = "comment";
@@ -224,6 +226,7 @@ function renderComments(comments, container) {
         container.appendChild(commentDiv);
     });
 }
+
 
 
 // 권한 확인
