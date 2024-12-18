@@ -173,36 +173,47 @@ function setupMenuEvents() {
 // 댓글 토글
 function toggleCommentSection(postId) {
     const commentSection = document.getElementById(`comments-${postId}`);
+    
     if (commentSection.classList.contains("hidden")) {
-        console.log(`댓글 보기 버튼 클릭됨: postId = ${postId}`);
-        fetchComments(postId); // 댓글 불러오기
-        commentSection.classList.remove("hidden"); // hidden 클래스 제거
+        commentSection.classList.remove("hidden");
+
+        // 댓글 입력창 및 기본 메시지 추가
+        if (!commentSection.hasChildNodes()) {
+            commentSection.innerHTML = `
+                <div class="comment-input">
+                    <input type="text" id="comment-input-${postId}" placeholder="댓글을 입력하세요..." />
+                    <button class="comment-submit-btn" onclick="addComment(${postId})">댓글 등록</button>
+                </div>
+                <div id="comment-list-${postId}" class="comment-list">
+                    <p class="no-comments">댓글이 없습니다.</p>
+                </div>
+            `;
+        }
+        fetchComments(postId); // 댓글 데이터 로드
     } else {
-        console.log(`댓글 창 숨기기: postId = ${postId}`);
-        commentSection.classList.add("hidden"); // 다시 숨기기
+        commentSection.classList.add("hidden");
     }
 }
 
 
 
+
 // 댓글 불러오기
 async function fetchComments(postId) {
-    const commentSection = document.getElementById(`comments-${postId}`);
-    commentSection.innerHTML = "댓글을 불러오는 중...";
+    const commentList = document.getElementById(`comment-list-${postId}`);
+    commentList.innerHTML = "<p>댓글을 불러오는 중...</p>";
 
     try {
         const response = await fetch(`${API_URL}/posts/${postId}/comments`);
         if (response.ok) {
             const comments = await response.json();
-            console.log("서버 응답 댓글 데이터:", comments); // 댓글 데이터 확인
-            renderComments(comments, commentSection);
+            renderComments(comments, commentList);
         } else {
-            console.error("댓글 불러오기 실패, 상태코드:", response.status);
-            commentSection.innerHTML = "<p>댓글을 불러오지 못했습니다.</p>";
+            commentList.innerHTML = "<p>댓글을 불러오지 못했습니다.</p>";
         }
     } catch (error) {
-        console.error("댓글 불러오기 중 오류 발생:", error);
-        commentSection.innerHTML = "<p>댓글을 불러오는 중 오류가 발생했습니다.</p>";
+        console.error("댓글 불러오기 오류:", error);
+        commentList.innerHTML = "<p>댓글을 불러오는 중 오류가 발생했습니다.</p>";
     }
 }
 
@@ -211,7 +222,7 @@ async function addComment(postId) {
     const commentText = input.value.trim();
 
     if (!commentText) {
-        alert("댓글을 입력해주세요.");
+        alert("댓글 내용을 입력하세요.");
         return;
     }
 
@@ -224,44 +235,33 @@ async function addComment(postId) {
 
         if (response.ok) {
             input.value = ""; // 입력창 초기화
-            fetchComments(postId); // 댓글 새로고침
+            fetchComments(postId); // 댓글 목록 새로고침
         } else {
             alert("댓글 등록 실패");
         }
     } catch (error) {
         console.error("댓글 등록 중 오류:", error);
-        alert("댓글 등록 중 오류가 발생했습니다.");
     }
 }
 
+
 // 댓글 렌더링
+
 function renderComments(comments, container) {
     container.innerHTML = ""; // 기존 댓글 초기화
 
-    // 댓글 입력창 항상 표시
-    const inputSection = `
-        <div class="comment-input">
-            <input type="text" placeholder="댓글을 입력하세요..." id="comment-input-${container.id}" />
-            <button class="comment-submit-btn" onclick="addComment('${container.id.split('-')[1]}')">댓글 등록</button>
-        </div>
-    `;
-    container.insertAdjacentHTML("afterbegin", inputSection);
-
-    // 댓글이 없는 경우
-    if (!comments || comments.length === 0) {
-        const noCommentMessage = `<p class="no-comments">댓글이 없습니다.</p>`;
-        container.insertAdjacentHTML("beforeend", noCommentMessage);
+    if (!comments.length) {
+        container.innerHTML = "<p class='no-comments'>댓글이 없습니다.</p>";
         return;
     }
 
-    // 댓글이 있는 경우
     comments.forEach((comment) => {
-        const commentDiv = document.createElement("div");
-        commentDiv.className = "comment";
-        commentDiv.innerHTML = `
+        const commentElement = document.createElement("div");
+        commentElement.className = "comment";
+        commentElement.innerHTML = `
             <p><strong>${comment.author}</strong>: ${comment.content}</p>
         `;
-        container.appendChild(commentDiv);
+        container.appendChild(commentElement);
     });
 }
 
