@@ -132,10 +132,11 @@ function toggleComments(postId) {
         commentSection.classList.add("active");
         fetchComments(postId); // 댓글 불러오기
     } else {
-        commentSection.innerHTML = ""; // 댓글 영역 비우기
         commentSection.classList.remove("active");
+        commentSection.innerHTML = ""; // 댓글 영역 비우기
     }
 }
+
 
 
 async function addComment(postId) {
@@ -146,7 +147,6 @@ async function addComment(postId) {
         return;
     }
 
-    // 서버로 댓글 등록 요청
     try {
         await fetch(`${API_URL}/posts/${postId}/comments`, {
             method: "POST",
@@ -154,14 +154,14 @@ async function addComment(postId) {
             body: JSON.stringify({ content: commentText, author: currentUser.username }),
         });
 
-        // 댓글 목록 새로 불러오기
-        fetchComments(postId);
+        fetchComments(postId); // 댓글 목록 새로 불러오기
         input.value = ""; // 입력 필드 초기화
     } catch (error) {
         console.error("댓글 추가 실패:", error);
         alert("댓글을 등록하는 중 오류가 발생했습니다.");
     }
 }
+
 
 async function fetchComments(postId) {
     const commentList = document.getElementById(`comment-list-${postId}`);
@@ -180,6 +180,7 @@ async function fetchComments(postId) {
         commentList.innerHTML = "서버 오류가 발생했습니다.";
     }
 }
+
 
 function renderComments(comments, container) {
     container.innerHTML = ""; // 기존 댓글 초기화
