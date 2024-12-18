@@ -174,12 +174,15 @@ function setupMenuEvents() {
 function toggleCommentSection(postId) {
     const commentSection = document.getElementById(`comments-${postId}`);
     if (commentSection.classList.contains("hidden")) {
-        fetchComments(postId);
+        console.log(`댓글 보기 버튼 클릭됨: postId = ${postId}`);
+        fetchComments(postId); // 댓글 데이터 불러오기
         commentSection.classList.remove("hidden");
     } else {
+        console.log(`댓글 창 숨기기: postId = ${postId}`);
         commentSection.classList.add("hidden");
     }
 }
+
 
 // 댓글 불러오기
 async function fetchComments(postId) {
@@ -207,7 +210,7 @@ async function fetchComments(postId) {
 function renderComments(comments, container) {
     container.innerHTML = ""; // 기존 댓글 초기화
 
-    if (comments.length === 0) {
+    if (!comments || comments.length === 0) {
         container.innerHTML = "<p>댓글이 없습니다.</p>";
         return;
     }
