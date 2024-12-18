@@ -130,11 +130,11 @@ form button:hover {
 }
 
 .menu-dropdown {
-    display: flex !important; /* 강제로 flex 적용 */
-    flex-direction: row !important; /* 강제로 가로 정렬 */
+    display: flex
+    flex-direction: row
     gap: 10px !important; /* 버튼 간 간격 */
-    align-items: center !important; /* 수직 가운데 정렬 */
-    justify-content: center !important; /* 수평 가운데 정렬 */
+    align-items: center
+    justify-content: center
     position: absolute;
     top: 25px;
     right: 0;
