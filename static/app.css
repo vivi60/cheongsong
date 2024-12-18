@@ -131,8 +131,10 @@ form button:hover {
 
 .menu-dropdown {
     display: flex; /* 가로 정렬 */
-    flex-direction: row; /* 가로로 아이템 배치 */
-    gap: 10px; /* 버튼 사이의 간격 */
+    flex-direction: row; /* 가로로 버튼 배치 */
+    gap: 10px; /* 버튼 사이 간격 */
+    align-items: center; /* 버튼을 수직 가운데 정렬 */
+    justify-content: center; /* 버튼을 수평 가운데 정렬 */
     position: absolute;
     top: 25px;
     right: 0;
