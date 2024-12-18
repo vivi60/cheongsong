@@ -132,11 +132,13 @@ function renderPosts(posts) {
             <button class="comment-btn" onclick="toggleCommentSection(${post.id})">댓글 보기</button>
             <div id="comments-${post.id}" class="comment-section hidden"></div>
         `;
+        console.log(`생성된 댓글 섹션 ID: comments-${post.id}`);
         postList.appendChild(postElement);
     });
 
     setupMenuEvents(); // 이벤트 리스너 설정
 }
+
 
 
 // 메뉴 이벤트 설정
