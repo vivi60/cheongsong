@@ -143,16 +143,18 @@ function setupMenuEvents() {
     document.querySelectorAll(".menu-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
             e.stopPropagation(); // 이벤트 전파 방지
-
+            
             // 현재 버튼의 드롭다운 메뉴 가져오기
             const dropdown = btn.nextElementSibling;
 
             // 모든 드롭다운 메뉴를 숨기고 현재 클릭된 메뉴만 표시
             document.querySelectorAll(".menu-dropdown").forEach((menu) => {
-                if (menu !== dropdown) menu.classList.add("hidden");
+                if (menu !== dropdown) {
+                    menu.classList.add("hidden");
+                }
             });
 
-            // 현재 클릭된 메뉴의 hidden 상태 토글
+            // 현재 클릭된 드롭다운만 표시
             dropdown.classList.toggle("hidden");
         });
     });
@@ -164,6 +166,7 @@ function setupMenuEvents() {
         });
     });
 }
+
 
 
 // 댓글 토글
