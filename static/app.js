@@ -103,11 +103,23 @@ function renderPost(post) {
     `;
     postList.appendChild(postElement);
 
+    // 메뉴 버튼 클릭 이벤트 설정
     const menuBtn = postElement.querySelector(".menu-btn");
-    menuBtn.addEventListener("click", () => {
-        postElement.querySelector(".menu-container").classList.toggle("active");
+    const menuContainer = postElement.querySelector(".menu-container");
+    menuBtn.addEventListener("click", (event) => {
+        event.stopPropagation(); // 클릭 이벤트 전파 방지
+        document.querySelectorAll(".menu-container").forEach((container) => {
+            if (container !== menuContainer) container.classList.remove("active");
+        });
+        menuContainer.classList.toggle("active");
+    });
+
+    // 화면의 다른 곳 클릭 시 메뉴 닫기
+    document.addEventListener("click", () => {
+        menuContainer.classList.remove("active");
     });
 }
+
 
 function toggleComments(postId) {
     const section = document.getElementById(`comments-${postId}`);
