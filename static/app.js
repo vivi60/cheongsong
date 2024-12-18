@@ -185,27 +185,43 @@ function toggleCommentSection(postId) {
 async function fetchComments(postId) {
     const commentSection = document.getElementById(`comments-${postId}`);
     commentSection.innerHTML = "댓글을 불러오는 중...";
+
     try {
         const response = await fetch(`${API_URL}/posts/${postId}/comments`);
         if (response.ok) {
             const comments = await response.json();
+            console.log("불러온 댓글 데이터:", comments); // 서버에서 가져온 댓글 로그 출력
             renderComments(comments, commentSection);
+        } else {
+            console.error("댓글 불러오기 실패, 상태코드:", response.status);
+            commentSection.innerHTML = "<p>댓글을 불러오지 못했습니다.</p>";
         }
     } catch (error) {
-        console.error("댓글 불러오기 실패:", error);
+        console.error("댓글 불러오기 중 오류 발생:", error);
+        commentSection.innerHTML = "<p>댓글을 불러오는 중 오류가 발생했습니다.</p>";
     }
 }
 
+
 // 댓글 렌더링
 function renderComments(comments, container) {
-    container.innerHTML = "";
+    container.innerHTML = ""; // 기존 댓글 초기화
+
+    if (comments.length === 0) {
+        container.innerHTML = "<p>댓글이 없습니다.</p>";
+        return;
+    }
+
     comments.forEach((comment) => {
         const commentDiv = document.createElement("div");
         commentDiv.className = "comment";
-        commentDiv.innerHTML = `<p><strong>${comment.author}</strong>: ${comment.content}</p>`;
+        commentDiv.innerHTML = `
+            <p><strong>${comment.author}</strong>: ${comment.content}</p>
+        `;
         container.appendChild(commentDiv);
     });
 }
+
 
 // 권한 확인
 function canEditDelete(author) {
