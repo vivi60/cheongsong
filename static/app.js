@@ -324,25 +324,22 @@ async function deletePost(postId) {
 // 게시글 수정 함수
 async function editPost(postId) {
     try {
-        // 기존 게시글의 제목과 내용을 가져오기
-        const response = await fetch(`${API_URL}/posts/${postId}`);
-        if (!response.ok) {
-            alert("게시글을 불러오는 데 실패했습니다.");
-            return;
-        }
-        const post = await response.json();
+        // 화면에 표시된 제목과 내용을 사용
+        const postElement = document.querySelector(`.post[data-id="${postId}"]`);
+        const currentTitle = postElement.querySelector("h3").innerText;
+        const currentContent = postElement.querySelector("p").innerText;
 
         // 사용자에게 새로운 제목과 내용을 입력받기
-        const newTitle = prompt("새로운 제목을 입력하세요:", post.title);
-        const newContent = prompt("새로운 내용을 입력하세요:", post.content);
+        const newTitle = prompt("새로운 제목을 입력하세요:", currentTitle);
+        const newContent = prompt("새로운 내용을 입력하세요:", currentContent);
 
         if (!newTitle || !newContent) {
             alert("제목과 내용은 반드시 입력해야 합니다.");
             return;
         }
 
-        // 수정된 게시글 서버에 전송
-        const updateResponse = await fetch(`${API_URL}/posts/${postId}`, {
+        // 수정된 게시글을 서버에 전송
+        const response = await fetch(`${API_URL}/posts/${postId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -352,7 +349,7 @@ async function editPost(postId) {
             }),
         });
 
-        if (updateResponse.ok) {
+        if (response.ok) {
             alert("게시글이 수정되었습니다.");
             fetchPosts(1); // 수정 후 게시글 목록 새로고침
         } else {
@@ -363,6 +360,7 @@ async function editPost(postId) {
         alert("게시글 수정 중 오류가 발생했습니다.");
     }
 }
+
 
 // 페이지네이션
 function renderPagination(total, currentPage) {
