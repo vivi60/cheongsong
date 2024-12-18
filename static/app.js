@@ -206,6 +206,33 @@ async function fetchComments(postId) {
     }
 }
 
+async function addComment(postId) {
+    const input = document.getElementById(`comment-input-${postId}`);
+    const commentText = input.value.trim();
+
+    if (!commentText) {
+        alert("댓글을 입력해주세요.");
+        return;
+    }
+
+    try {
+        const response = await fetch(`${API_URL}/posts/${postId}/comments`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: commentText, author: currentUser.username }),
+        });
+
+        if (response.ok) {
+            input.value = ""; // 입력창 초기화
+            fetchComments(postId); // 댓글 새로고침
+        } else {
+            alert("댓글 등록 실패");
+        }
+    } catch (error) {
+        console.error("댓글 등록 중 오류:", error);
+        alert("댓글 등록 중 오류가 발생했습니다.");
+    }
+}
 
 // 댓글 렌더링
 function renderComments(comments, container) {
