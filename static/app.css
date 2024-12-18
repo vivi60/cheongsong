@@ -132,7 +132,6 @@ form button:hover {
     border: 1px solid #ddd;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    display: flex; /* 가로 정렬을 위해 flex 사용 */
     gap: 10px; /* 버튼 사이 여백 추가 */
     align-items: center; /* 버튼들을 수직 가운데 정렬 */
     padding: 5px 10px; /* 내부 여백 */
