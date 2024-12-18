@@ -174,7 +174,13 @@ function setupMenuEvents() {
 function toggleCommentSection(postId) {
     const commentSection = document.getElementById(`comments-${postId}`);
     
+    if (!commentSection) {
+        console.error(`댓글 섹션을 찾을 수 없습니다: postId = ${postId}`);
+        return;
+    }
+    
     if (commentSection.classList.contains("hidden")) {
+        // 댓글 섹션 열기
         commentSection.classList.remove("hidden");
 
         // 댓글 입력창 및 기본 메시지 추가
@@ -189,8 +195,11 @@ function toggleCommentSection(postId) {
                 </div>
             `;
         }
-        fetchComments(postId); // 댓글 데이터 로드
+
+        // 댓글 데이터 로드
+        fetchComments(postId);
     } else {
+        // 댓글 섹션 닫기
         commentSection.classList.add("hidden");
     }
 }
@@ -198,9 +207,15 @@ function toggleCommentSection(postId) {
 
 
 
+
 // 댓글 불러오기
 async function fetchComments(postId) {
     const commentList = document.getElementById(`comment-list-${postId}`);
+    if (!commentList) {
+        console.error(`댓글 리스트를 찾을 수 없습니다: postId = ${postId}`);
+        return;
+    }
+
     commentList.innerHTML = "<p>댓글을 불러오는 중...</p>";
 
     try {
@@ -243,6 +258,7 @@ async function addComment(postId) {
         console.error("댓글 등록 중 오류:", error);
     }
 }
+
 
 
 // 댓글 렌더링
