@@ -135,8 +135,9 @@ function renderPosts(posts) {
         postList.appendChild(postElement);
     });
 
-    setupMenuEvents();
+    setupMenuEvents(); // 이벤트 리스너 설정
 }
+
 
 // 메뉴 이벤트 설정
 function setupMenuEvents() {
