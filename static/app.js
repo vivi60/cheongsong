@@ -122,8 +122,79 @@ function renderPost(post) {
 
 
 function toggleComments(postId) {
-    const section = document.getElementById(`comments-${postId}`);
-    section.style.display = section.style.display === "block" ? "none" : "block";
+    const commentSection = document.getElementById(`comments-${postId}`);
+    if (!commentSection.classList.contains("active")) {
+        commentSection.innerHTML = `
+            <input type="text" id="comment-input-${postId}" placeholder="댓글을 입력하세요..." />
+            <button class="comment-submit-btn" onclick="addComment(${postId})">댓글 등록</button>
+            <div id="comment-list-${postId}"></div>
+        `;
+        commentSection.classList.add("active");
+    } else {
+        commentSection.innerHTML = "";
+        commentSection.classList.remove("active");
+    }
+    commentSection.style.display = commentSection.style.display === "block" ? "none" : "block";
+}
+
+async function addComment(postId) {
+    const input = document.getElementById(`comment-input-${postId}`);
+    const commentText = input.value.trim();
+    if (!commentText) {
+        alert("댓글을 입력해주세요.");
+        return;
+    }
+
+    // 서버로 댓글 등록 요청
+    try {
+        await fetch(`${API_URL}/posts/${postId}/comments`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: commentText, author: currentUser.username }),
+        });
+
+        // 댓글 목록 새로 불러오기
+        fetchComments(postId);
+        input.value = ""; // 입력 필드 초기화
+    } catch (error) {
+        console.error("댓글 추가 실패:", error);
+        alert("댓글을 등록하는 중 오류가 발생했습니다.");
+    }
+}
+
+async function fetchComments(postId) {
+    const commentList = document.getElementById(`comment-list-${postId}`);
+    commentList.innerHTML = "댓글을 불러오는 중...";
+
+    try {
+        const response = await fetch(`${API_URL}/posts/${postId}/comments`);
+        if (response.ok) {
+            const comments = await response.json();
+            renderComments(comments, commentList);
+        } else {
+            commentList.innerHTML = "댓글을 불러오는 데 실패했습니다.";
+        }
+    } catch (error) {
+        console.error("댓글 불러오기 실패:", error);
+        commentList.innerHTML = "서버 오류가 발생했습니다.";
+    }
+}
+
+function renderComments(comments, container) {
+    container.innerHTML = ""; // 기존 댓글 초기화
+    if (comments.length === 0) {
+        container.innerHTML = "<p>댓글이 없습니다.</p>";
+        return;
+    }
+
+    comments.forEach(comment => {
+        const commentElement = document.createElement("div");
+        commentElement.className = "comment";
+        commentElement.innerHTML = `
+            <p><strong>${comment.author}</strong>: ${comment.content}</p>
+        `;
+        container.appendChild(commentElement);
+    });
 }
 
 async function deletePost(postId) {
