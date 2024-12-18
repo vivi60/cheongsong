@@ -110,7 +110,9 @@ async function fetchPosts(page) {
 // 게시글 렌더링
 function renderPosts(posts) {
     postList.innerHTML = "";
-    posts.forEach((post) => {
+    
+    // 최신 게시글이 위로 오도록 역순 정렬
+    posts.reverse().forEach((post) => {
         const postElement = document.createElement("div");
         postElement.className = "post";
         postElement.innerHTML = `
@@ -132,12 +134,12 @@ function renderPosts(posts) {
             <button class="comment-btn" onclick="toggleCommentSection(${post.id})">댓글 보기</button>
             <div id="comments-${post.id}" class="comment-section hidden"></div>
         `;
-        console.log(`생성된 댓글 섹션 ID: comments-${post.id}`);
         postList.appendChild(postElement);
     });
 
     setupMenuEvents(); // 이벤트 리스너 설정
 }
+
 
 
 
