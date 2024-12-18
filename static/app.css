@@ -213,10 +213,10 @@ form button:hover {
     background-color: #e60009;
     color: white;
     border: none;
-    padding: 8px 12px;
+    padding: 4px 8px;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .comment-submit-btn:hover {
