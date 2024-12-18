@@ -211,12 +211,23 @@ async function fetchComments(postId) {
 function renderComments(comments, container) {
     container.innerHTML = ""; // 기존 댓글 초기화
 
+    // 댓글 입력창 항상 표시
+    const inputSection = `
+        <div class="comment-input">
+            <input type="text" placeholder="댓글을 입력하세요..." id="comment-input-${container.id}" />
+            <button class="comment-submit-btn" onclick="addComment('${container.id.split('-')[1]}')">댓글 등록</button>
+        </div>
+    `;
+    container.insertAdjacentHTML("afterbegin", inputSection);
+
+    // 댓글이 없는 경우
     if (!comments || comments.length === 0) {
-        container.innerHTML = "<p>댓글이 없습니다.</p>";
+        const noCommentMessage = `<p class="no-comments">댓글이 없습니다.</p>`;
+        container.insertAdjacentHTML("beforeend", noCommentMessage);
         return;
     }
 
-    // 댓글 데이터 반복 출력
+    // 댓글이 있는 경우
     comments.forEach((comment) => {
         const commentDiv = document.createElement("div");
         commentDiv.className = "comment";
@@ -226,6 +237,7 @@ function renderComments(comments, container) {
         container.appendChild(commentDiv);
     });
 }
+
 
 
 
