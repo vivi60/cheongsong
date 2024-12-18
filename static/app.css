@@ -188,6 +188,44 @@ form button:hover {
 }
 
 /* 댓글 섹션 */
+.comment-input {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.comment-input input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.comment-input button {
+    background-color: #e60009;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.comment-input button:hover {
+    background-color: #b80006;
+}
+
+.comment-list {
+    margin-top: 10px;
+}
+
+.comment {
+    background: #f1f1f1;
+    padding: 8px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+}
+
 .comment-section {
     display: none;
     margin-top: 10px;
