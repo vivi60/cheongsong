@@ -273,7 +273,7 @@ function renderComments(comments, container, postId) {
         const commentElement = document.createElement("div");
         commentElement.className = "comment";
         commentElement.innerHTML = `
-            <p><strong>${comment.author}</strong>: ${comment.content}</p>
+            <p>${comment.content}</p>
             ${
                 canEditDelete(comment.author)
                     ? `<button class="comment-delete-btn" onclick="deleteComment(${postId}, ${comment.id})">삭제</button>`
