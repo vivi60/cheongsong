@@ -142,15 +142,29 @@ function renderPosts(posts) {
 function setupMenuEvents() {
     document.querySelectorAll(".menu-btn").forEach((btn) => {
         btn.addEventListener("click", (e) => {
-            e.stopPropagation();
+            e.stopPropagation(); // 이벤트 전파 방지
+
+            // 현재 버튼의 드롭다운 메뉴 가져오기
             const dropdown = btn.nextElementSibling;
+
+            // 모든 드롭다운 메뉴를 숨기고 현재 클릭된 메뉴만 표시
             document.querySelectorAll(".menu-dropdown").forEach((menu) => {
                 if (menu !== dropdown) menu.classList.add("hidden");
             });
+
+            // 현재 클릭된 메뉴의 hidden 상태 토글
             dropdown.classList.toggle("hidden");
         });
     });
+
+    // 화면의 다른 곳 클릭 시 모든 드롭다운 메뉴 닫기
+    document.addEventListener("click", () => {
+        document.querySelectorAll(".menu-dropdown").forEach((menu) => {
+            menu.classList.add("hidden");
+        });
+    });
 }
+
 
 // 댓글 토글
 function toggleCommentSection(postId) {
