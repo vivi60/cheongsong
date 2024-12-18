@@ -99,9 +99,10 @@ function renderPost(post) {
         </div>
         <p>${post.content}</p>
         <button class="comment-btn" onclick="toggleComments(${post.id})">댓글 보기</button>
-        <div class="comment-section" id="comments-${post.id}"></div>
+        <div class="comment-section" id="comments-${post.id}"></div> <!-- 댓글 섹션 -->
     `;
     postList.appendChild(postElement);
+}
 
     // 메뉴 버튼 클릭 이벤트 설정
     const menuBtn = postElement.querySelector(".menu-btn");
