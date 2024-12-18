@@ -107,7 +107,6 @@ async function fetchPosts(page) {
     }
 }
 
-// 게시글 렌더링
 function renderPosts(posts) {
     postList.innerHTML = "";
     
@@ -115,6 +114,8 @@ function renderPosts(posts) {
     posts.reverse().forEach((post) => {
         const postElement = document.createElement("div");
         postElement.className = "post";
+        postElement.setAttribute("data-post-id", post.id); // data-post-id 속성 추가
+
         postElement.innerHTML = `
             <div class="post-header">
                 <h3>${post.title}</h3>
@@ -134,11 +135,13 @@ function renderPosts(posts) {
             <button class="comment-btn" onclick="toggleCommentSection(${post.id})">댓글 보기</button>
             <div id="comments-${post.id}" class="comment-section hidden"></div>
         `;
+
         postList.appendChild(postElement);
     });
 
     setupMenuEvents(); // 이벤트 리스너 설정
 }
+
 
 
 
@@ -321,45 +324,71 @@ async function deletePost(postId) {
     }
 }
 
-// 게시글 수정 함수
 async function editPost(postId) {
     try {
-        // 화면에 표시된 제목과 내용을 사용
-        const postElement = document.querySelector(`.post[data-id="${postId}"]`);
-        const currentTitle = postElement.querySelector("h3").innerText;
-        const currentContent = postElement.querySelector("p").innerText;
-
-        // 사용자에게 새로운 제목과 내용을 입력받기
-        const newTitle = prompt("새로운 제목을 입력하세요:", currentTitle);
-        const newContent = prompt("새로운 내용을 입력하세요:", currentContent);
-
-        if (!newTitle || !newContent) {
-            alert("제목과 내용은 반드시 입력해야 합니다.");
-            return;
+        // 서버에서 현재 게시글 데이터 가져오기
+        const response = await fetch(`${API_URL}/posts/${postId}`);
+        if (!response.ok) {
+            throw new Error("게시글을 불러올 수 없습니다.");
         }
 
-        // 수정된 게시글을 서버에 전송
+        const post = await response.json();
+
+        // 수정 UI 동적으로 생성
+        const postElement = document.querySelector(`[data-post-id="${postId}"]`);
+        if (!postElement) {
+            throw new Error("게시글 요소를 찾을 수 없습니다.");
+        }
+
+        // 기존 게시글 내용 숨기기
+        postElement.innerHTML = `
+            <div class="edit-post">
+                <input type="text" id="edit-title-${postId}" value="${post.title}" placeholder="제목" />
+                <textarea id="edit-content-${postId}" rows="4">${post.content}</textarea>
+                <button onclick="saveEditPost(${postId})">저장</button>
+                <button onclick="cancelEditPost(${postId})">취소</button>
+            </div>
+        `;
+    } catch (error) {
+        console.error("게시글 수정 중 오류:", error);
+        alert("게시글을 불러오는 중 오류가 발생했습니다.");
+    }
+}
+
+// 수정 내용 저장
+async function saveEditPost(postId) {
+    const newTitle = document.getElementById(`edit-title-${postId}`).value.trim();
+    const newContent = document.getElementById(`edit-content-${postId}`).value.trim();
+
+    if (!newTitle || !newContent) {
+        alert("제목과 내용을 입력해주세요.");
+        return;
+    }
+
+    try {
         const response = await fetch(`${API_URL}/posts/${postId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                title: newTitle,
-                content: newContent,
-                author: currentUser.username
-            }),
+            body: JSON.stringify({ title: newTitle, content: newContent }),
         });
 
         if (response.ok) {
             alert("게시글이 수정되었습니다.");
-            fetchPosts(1); // 수정 후 게시글 목록 새로고침
+            fetchPosts(1); // 게시글 다시 불러오기
         } else {
-            alert("게시글 수정에 실패했습니다.");
+            throw new Error("게시글 수정 실패");
         }
     } catch (error) {
-        console.error("게시글 수정 오류:", error);
-        alert("게시글 수정 중 오류가 발생했습니다.");
+        console.error("게시글 수정 저장 중 오류:", error);
+        alert("게시글을 저장하는 중 오류가 발생했습니다.");
     }
 }
+
+// 수정 취소
+function cancelEditPost(postId) {
+    fetchPosts(1); // 게시글 새로고침
+}
+
 
 
 // 페이지네이션
