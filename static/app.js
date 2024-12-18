@@ -213,18 +213,13 @@ function toggleCommentSection(postId) {
 // 댓글 불러오기
 async function fetchComments(postId) {
     const commentList = document.getElementById(`comment-list-${postId}`);
-    if (!commentList) {
-        console.error(`댓글 리스트를 찾을 수 없습니다: postId = ${postId}`);
-        return;
-    }
-
     commentList.innerHTML = "<p>댓글을 불러오는 중...</p>";
 
     try {
         const response = await fetch(`${API_URL}/posts/${postId}/comments`);
         if (response.ok) {
             const comments = await response.json();
-            renderComments(comments, commentList);
+            renderComments(comments, commentList, postId);
         } else {
             commentList.innerHTML = "<p>댓글을 불러오지 못했습니다.</p>";
         }
@@ -265,7 +260,8 @@ async function addComment(postId) {
 
 // 댓글 렌더링
 
-function renderComments(comments, container) {
+
+function renderComments(comments, container, postId) {
     container.innerHTML = ""; // 기존 댓글 초기화
 
     if (!comments.length) {
@@ -278,12 +274,36 @@ function renderComments(comments, container) {
         commentElement.className = "comment";
         commentElement.innerHTML = `
             <p><strong>${comment.author}</strong>: ${comment.content}</p>
+            ${
+                canEditDelete(comment.author)
+                    ? `<button class="comment-delete-btn" onclick="deleteComment(${postId}, ${comment.id})">삭제</button>`
+                    : ""
+            }
         `;
         container.appendChild(commentElement);
     });
 }
 
 
+async function deleteComment(postId, commentId) {
+    if (!confirm("이 댓글을 삭제하시겠습니까?")) return;
+
+    try {
+        const response = await fetch(`${API_URL}/posts/${postId}/comments/${commentId}`, {
+            method: "DELETE",
+        });
+
+        if (response.ok) {
+            alert("댓글이 삭제되었습니다.");
+            fetchComments(postId); // 댓글 새로고침
+        } else {
+            alert("댓글 삭제에 실패했습니다.");
+        }
+    } catch (error) {
+        console.error("댓글 삭제 중 오류:", error);
+        alert("댓글 삭제 중 오류가 발생했습니다.");
+    }
+}
 
 
 // 권한 확인
