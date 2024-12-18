@@ -120,9 +120,9 @@ function renderPost(post) {
     });
 }
 
-
 function toggleComments(postId) {
     const commentSection = document.getElementById(`comments-${postId}`);
+
     if (!commentSection.classList.contains("active")) {
         commentSection.innerHTML = `
             <input type="text" id="comment-input-${postId}" placeholder="댓글을 입력하세요..." />
@@ -130,12 +130,13 @@ function toggleComments(postId) {
             <div id="comment-list-${postId}"></div>
         `;
         commentSection.classList.add("active");
+        fetchComments(postId); // 댓글 불러오기
     } else {
-        commentSection.innerHTML = "";
+        commentSection.innerHTML = ""; // 댓글 영역 비우기
         commentSection.classList.remove("active");
     }
-    commentSection.style.display = commentSection.style.display === "block" ? "none" : "block";
 }
+
 
 async function addComment(postId) {
     const input = document.getElementById(`comment-input-${postId}`);
