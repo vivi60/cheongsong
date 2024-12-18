@@ -196,6 +196,10 @@ form button:hover {
     box-shadow: none;
 }
 
+.hidden {
+    display: none;
+}
+
 /* 댓글 섹션 */
 .comment-input {
     display: flex;
