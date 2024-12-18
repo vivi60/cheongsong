@@ -24,7 +24,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["https://cheongsongdae.onrender.com"],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["put"],
     allow_headers=["*"],
 )
 
