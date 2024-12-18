@@ -284,6 +284,21 @@ form button:hover {
     background-color: #b80006;
 }
 
+.comment-delete-btn {
+    background-color: #e60009;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+.comment-delete-btn:hover {
+    background-color: #b80006;
+}
+
 /* 페이지네이션 */
 .pagination {
     display: flex;
