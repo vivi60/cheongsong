@@ -369,17 +369,20 @@ async function saveEditPost(postId) {
             body: JSON.stringify({ title: newTitle, content: newContent }),
         });
 
-        if (response.ok) {
-            alert("게시글이 수정되었습니다.");
-            fetchPosts(1); // 게시글 다시 불러오기
-        } else {
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("서버 오류 메시지:", errorData);
             throw new Error("게시글 수정 실패");
         }
+
+        alert("게시글이 수정되었습니다.");
+        fetchPosts(1); // 게시글 다시 불러오기
     } catch (error) {
         console.error("게시글 수정 저장 중 오류:", error);
         alert("게시글을 저장하는 중 오류가 발생했습니다.");
     }
 }
+
 
 
 // 수정 취소
