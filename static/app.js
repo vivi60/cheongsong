@@ -321,7 +321,6 @@ async function deletePost(postId) {
     }
 }
 
-//게시글 수정
 // 게시글 수정 함수
 async function editPost(postId) {
     try {
