@@ -138,20 +138,26 @@ form button:hover {
     border: 1px solid #ddd;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
-    padding: 5px 10px;
     z-index: 10;
+    padding: 5px;
 }
+
 
 .menu-dropdown.hidden {
-    display: none; /* 숨김 */
+    display: none; /* hidden 클래스가 있으면 숨김 */
 }
 
+.menu-dropdown:not(.hidden) {
+    display: flex; /* hidden 클래스가 없으면 flex로 표시 */
+    flex-direction: column;
+    gap: 5px;
+}
 .menu-dropdown button {
     background: none;
     border: none;
     padding: 5px 10px;
-    font-size: 14px;
     cursor: pointer;
+    color: #333;
     transition: background-color 0.3s ease;
 }
 
