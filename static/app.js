@@ -109,12 +109,13 @@ async function fetchPosts(page) {
 
 function renderPosts(posts) {
     postList.innerHTML = "";
-    
+
     // 최신 게시글이 위로 오도록 역순 정렬
     posts.reverse().forEach((post) => {
         const postElement = document.createElement("div");
         postElement.className = "post";
-        postElement.setAttribute("data-post", JSON.stringify(post)); // 전체 게시글 데이터 저장
+        postElement.setAttribute("data-post-id", post.id); // 게시글 ID 속성 추가
+        postElement.setAttribute("data-post", JSON.stringify(post)); // 게시글 데이터 저장
 
         postElement.innerHTML = `
             <div class="post-header">
@@ -141,6 +142,7 @@ function renderPosts(posts) {
 
     setupMenuEvents(); // 이벤트 리스너 설정
 }
+
 
 
 
@@ -327,13 +329,14 @@ async function deletePost(postId) {
 
 //게시글수정
 function editPost(postId) {
+    // 게시글 엘리먼트를 ID 기반으로 찾음
     const postElement = document.querySelector(`[data-post-id="${postId}"]`);
     if (!postElement) {
         alert("게시글을 찾을 수 없습니다.");
         return;
     }
 
-    // 데이터 가져오기
+    // 게시글 데이터를 가져옴
     const post = JSON.parse(postElement.getAttribute("data-post"));
 
     // 수정 UI 생성
@@ -346,6 +349,7 @@ function editPost(postId) {
         </div>
     `;
 }
+
 
 
 // 수정 내용 저장
