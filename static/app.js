@@ -124,22 +124,23 @@ function toggleComments(postId) {
     const commentSection = document.getElementById(`comments-${postId}`);
 
     if (!commentSection.classList.contains("active")) {
-        // 댓글 영역 초기화 및 표시
+        // 댓글 입력창과 댓글 목록을 초기화 및 생성
         commentSection.innerHTML = `
             <div class="comment-input">
                 <input type="text" id="comment-input-${postId}" placeholder="댓글을 입력하세요..." />
                 <button class="comment-submit-btn" onclick="addComment(${postId})">댓글 등록</button>
             </div>
-            <div id="comment-list-${postId}" class="comment-list">댓글을 불러오는 중...</div>
+            <div id="comment-list-${postId}" class="comment-list"></div>
         `;
         commentSection.classList.add("active");
-        fetchComments(postId); // 댓글 데이터 불러오기
+        fetchComments(postId); // 댓글 불러오기
     } else {
         // 댓글 영역 닫기
         commentSection.innerHTML = "";
         commentSection.classList.remove("active");
     }
 }
+
 
 
 
@@ -173,6 +174,7 @@ async function addComment(postId) {
 
 
 
+
 async function fetchComments(postId) {
     const commentList = document.getElementById(`comment-list-${postId}`);
     commentList.innerHTML = "댓글을 불러오는 중...";
@@ -194,6 +196,7 @@ async function fetchComments(postId) {
 
 
 
+
 function renderComments(comments, container) {
     container.innerHTML = ""; // 기존 댓글 초기화
 
@@ -211,6 +214,7 @@ function renderComments(comments, container) {
         container.appendChild(commentElement);
     });
 }
+
 
 
 
