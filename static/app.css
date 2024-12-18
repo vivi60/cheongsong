@@ -108,6 +108,11 @@ form button:hover {
     color: #888;
 }
 
+.post p {
+    margin: 5px 0; /* 여백을 최소화 */
+    line-height: 1.4; /* 줄 간격 */
+}
+
 .menu-container {
     position: relative;
 }
