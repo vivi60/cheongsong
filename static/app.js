@@ -363,8 +363,8 @@ async function saveEditPost(postId) {
     }
 
     try {
-        const response = await fetch(`${API_URL}/posts/${postId}`, {
-            method: "PUT",
+        const response = await fetch(`${API_URL}/posts/update/${postId}`, {
+            method: "POST", // POST로 변경
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ title: newTitle, content: newContent }),
         });
@@ -382,6 +382,7 @@ async function saveEditPost(postId) {
         alert("게시글을 저장하는 중 오류가 발생했습니다.");
     }
 }
+
 
 
 
