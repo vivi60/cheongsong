@@ -125,7 +125,6 @@ function renderPosts(posts) {
                         ? `<div class="menu-container">
                             <button class="menu-btn">⋮</button>
                             <div class="menu-dropdown hidden">
-                                <button onclick="editPost(${post.id})">수정</button>
                                 <button onclick="deletePost(${post.id})">삭제</button>
                             </div>
                         </div>`
