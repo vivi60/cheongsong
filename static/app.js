@@ -3,6 +3,7 @@ const API_URL = "https://cheongsongdae.onrender.com";
 const users = [
     { username: "admin", password: "admin123", role: "admin" },
     { username: "user1", password: "user123", role: "user" },
+    { username: "2294001", password: "2294001", role: "user" },
 ];
 
 const loginSection = document.getElementById("loginSection");
